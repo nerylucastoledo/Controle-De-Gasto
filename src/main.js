@@ -12,6 +12,18 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
+Vue.filter("numeroPreco", valor => {
+  valor = Number(valor)
+  if(!isNaN(valor)) {
+    return valor.toLocaleString("pt-bR", {
+      style: "currency",
+      currency: "BRL"
+    })
+  } else {
+    return ""
+  }
+})
+
 const firebaseConfig = { 
   apiKey : "AIzaSyB4d7JiPLCirz941jZe0l0ES_6vb9XmhHw" , 
   authDomain : "meusgastos-d1929.firebaseapp.com" , 

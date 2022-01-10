@@ -1,60 +1,23 @@
 <template>
     <section class="container">
-        <div class="box-invoice" :style="{backgroundColor: cardColor1}">
+        <div class="box-invoice" :style="color">
             <h1 class="titulo-card">Nubank</h1>
             
-            <p class="value-invoice">R$R$652,30</p>
+            <p class="value-invoice">{{valueTotalInvoice | numeroPreco}}</p>
         </div>
 
         <div class="invoice">
             <ul class="invoice-people">
-                <li :style="{backgroundColor: cardColor1}">Lucas</li>
-                <li :style="{backgroundColor: cardColor1}">Alessa</li>
-                <li :style="{backgroundColor: cardColor1}">Helaine</li>
-                <li :style="{backgroundColor: cardColor1}">André</li>
+                <li :style="color" v-for="name in names" :key="name" @click="filterName(name)">
+                    {{name}}
+                </li>
             </ul>
 
-            <div class="invoice-values">
-                <div>
-                    <p>Chinelo da polo</p>
+            <div v-if="listItem.length" class="invoice-values">
+                <div v-for="(item, index) in listItem" :key="item">
+                    <p class="name-item">{{item}}</p>
 
-                    <p>R$146,80</p>
-
-                    <span class="apagar">X</span>
-                    <span class="editar">E</span>
-                </div>
-
-                <div>
-                    <p>Chinelo da polo</p>
-
-                    <p>R$146,80</p>
-
-                    <span class="apagar">X</span>
-                    <span class="editar">E</span>
-                </div>
-
-                <div>
-                    <p>Chinelo da polo</p>
-
-                    <p>R$146,80</p>
-
-                    <span class="apagar">X</span>
-                    <span class="editar">E</span>
-                </div>
-
-                <div>
-                    <p>Chinelo da polo</p>
-
-                    <p>R$146,80</p>
-
-                    <span class="apagar">X</span>
-                    <span class="editar">E</span>
-                </div>
-
-                <div>
-                    <p>Chinelo da polo</p>
-
-                    <p>R$146,80</p>
+                    <p>{{listValue[index] | numeroPreco}}</p>
 
                     <span class="apagar">X</span>
                     <span class="editar">E</span>
@@ -62,17 +25,85 @@
             </div>
         </div>
 
-        <h2 class="total">Total: R$143,90</h2>
+        <h2 class="total">Total: {{valuePeopleTotal | numeroPreco}}</h2>
     </section>
 </template>
 
 <script>
 
 export default {
+
+    name: "CardInvoice",
+
     data() {
         return {
-            cardColor1: "#8E2C91"
+            items: null,
+            names: [],
+            color: {
+                backgroundColor: "#"
+            },
+            params: '',
+            user: '',
+            listItem: [],
+            listValue: [],
+            valuePeopleTotal: 0,
+            valueTotalInvoice: 0
         }
+    },
+
+    watch: {
+        $route() {
+            this.loadingInvoice()
+        }
+    },
+
+    methods: {
+        getInvoice() {
+            this.params = this.$route.params.id
+            this.user = this.$store.state.user.data.email.split("@")[0]
+            fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${this.user}/banco${this.params}.json`)
+            .then(req => req.json())
+            .then(res => {
+                console.log(res)
+                this.items = res
+                this.color.backgroundColor += res["cor"]
+                Object.keys(res).forEach((item) => {
+                    if(item != "cartao" && item != "cor" && item != "id") {
+                        this.names.push(item)
+                        for(var key in res[item]) {
+                            this.valueTotalInvoice += parseFloat(res[item][key])
+                        }
+                    }
+                })
+            })
+        },
+
+        filterName(name) {
+            this.$router.push({query: {name: name}})
+        },
+
+        loadingInvoice() {
+            this.listValue = []
+            this.listItem = []
+            this.valuePeopleTotal = 0
+            const namePeople = this.$route.query.name || "Alessa"
+            fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${this.user}/banco${this.params}/${namePeople}.json`)
+            .then(req => req.json())
+            .then(res => {
+                for (var data in res) {
+                    this.listItem.push(data)
+                    this.listValue.push(res[data])
+                }
+                this.listValue.forEach((item) => {
+                    this.valuePeopleTotal += parseFloat(item)
+                })
+            })
+        },
+    },
+
+    created() {
+        this.getInvoice()
+        this.loadingInvoice()
     }
 }
 
@@ -113,7 +144,7 @@ export default {
 .invoice-values div {
     background-color: #AB9EAB;
     border-radius: 10px;
-    padding: 10px 5px;
+    padding: 25px 5px 15px 5px;
     display: flex;
     align-items: center;
     color: #fff;
@@ -128,6 +159,10 @@ export default {
 
 .invoice-values div p:nth-child(1) {
     margin-right: 20px;
+}
+
+.name-item {
+    width: 135px;
 }
 
 .apagar, .editar {
@@ -153,6 +188,7 @@ export default {
 .total {
     text-align: end;
     margin-top: 20px;
+    margin-bottom: 40px;
 }
 
 </style>

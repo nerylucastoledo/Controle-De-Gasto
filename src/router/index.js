@@ -32,7 +32,7 @@ const routes = [
     component: ForgotPassword
   },
   {
-    path: '/card-invoice',
+    path: '/card-invoice/:id',
     name: 'CardInvoice',
     component: CardInvoice
   },

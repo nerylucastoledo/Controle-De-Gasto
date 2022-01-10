@@ -18,7 +18,8 @@
             </select>
         </div>
 
-        <Cards/>
+        <Cards :cards="dataInvoice"></Cards>
+
     </section>
 </template>
 
@@ -58,14 +59,33 @@ export default {
                 "2025"
             ],
             mounthSelected: "",
-            yearSelected: ""
+            yearSelected: "",
+            dataInvoice: null
         }
     },
 
     methods: {
         teste() {
-            console.log(this.mounthSelected)
+            
+        },
+
+        getData() {
+            const user = this.$store.state.user.data.email.split("@")[0]
+            fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${user}.json`)
+            .then(req => req.json())
+            .then(res => {
+                var result = Object.keys(res).map(function(key) {
+                    return res[key];
+                });
+                this.dataInvoice = result
+            })
         }
+    },
+
+    created() {
+        setTimeout(() => {
+            this.getData()
+        }, 400);
     }
 }
 
@@ -86,6 +106,15 @@ export default {
     border: 1px solid #B9DD2A;
     font-family: 'Montserrat';
     font-size: 16px;
+}
+
+.not-fund-card p{
+    text-align: center;
+    margin-top: 50px;
+}
+
+.not-fund-card a {
+    text-decoration: none;
 }
 
 </style>

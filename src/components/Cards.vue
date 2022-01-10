@@ -1,24 +1,14 @@
 <template>
     <section class="container cards">
-        <div v-if="cards.length">
-            <router-link to="/card-invoice">
-                <div class="box-invoice" :style="{backgroundColor: cardColor1}">
-                    <h1 class="titulo-card">Nubank</h1>
-                    
-                    <p class="value-invoice">R$R$652,30</p>
-                </div>
-            </router-link>
-
-            <div class="box-invoice" :style="{backgroundColor: cardColor2}">
-                <h1 class="titulo-card">Samsung</h1>
-                
-                <p class="value-invoice">R$R$652,30</p>
-            </div>
-
-            <div class="box-invoice" :style="{backgroundColor: cardColor3}">
-                <h1 class="titulo-card">Gastos Pessoal</h1>
-                
-                <p class="value-invoice">R$R$652,30</p>
+        <div v-if="cards">
+            <div v-for="(card, key) in cards" :key="card+key">
+                <router-link :to="{ name: 'CardInvoice', params: { id: card['id']}}">
+                    <div class="box-invoice" :style="{backgroundColor: '#' + card['cor']}">
+                        <h1 class="titulo-card">{{card["cartao"]}}</h1>
+                        
+                        <p class="value-invoice">R$R$652,30</p>
+                    </div>
+                </router-link>
             </div>
         </div>
         <div v-else>
@@ -33,9 +23,11 @@
 <script>
 
 export default {
+
+    props: ["cards"],
+
     data() {
         return {
-            cards: ['s'],
             cardColor1: "#8E2C91",
             cardColor2: "#222222",
             cardColor3: "#DA802D"
