@@ -36,6 +36,7 @@ import * as firebase from 'firebase';
 export default {
     data() {
         return {
+            dataApi: '',
             cardSelected: {},
             cards: [],
             peopleSelected: "",
@@ -45,7 +46,9 @@ export default {
             user: "",
             month: this.$store.state.month,
             year: this.$store.state.year,
-            objectCard: {}
+            objectCard: {},
+            objectDataCards: [],
+            listMonthRegistered: []
         }
     },
 
@@ -53,7 +56,7 @@ export default {
         getDataCards() {
             this.user = this.$store.state.user.data.email.split("@")[0]
             const yearAndMonth = this.month + this.year
-
+            
             fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${this.user}/${yearAndMonth}/.json`)
             .then(req => req.json())
             .then(res => {
@@ -65,6 +68,7 @@ export default {
                             }
                         }
                     })
+                    this.dataApi = res
                     this.cards.push(res[item]["cartao"])
                     this.objectCard[res[item]["cartao"]] = item 
                 })
@@ -75,16 +79,18 @@ export default {
             const card = this.objectCard[this.cardSelected]
             const yearAndMonth = this.month + this.year
 
-            const verifyMonth = firebase.database().ref(`/${this.user}/${yearAndMonth}/`).orderByCalled_
-            if(!verifyMonth) {
-                this.newMonthForExpense(card, yearAndMonth)
-            }
+            firebase.database().ref(`/${this.user}/${yearAndMonth}/${card}`).once("value", snapshot => {
+                if (snapshot.exists()){
+                    firebase.database().ref(`/${this.user}/${yearAndMonth}/${card}`)
+                    .child(`${this.peopleSelected}`)
+                    .update({
+                        [this.item]: parseFloat(this.valueItem)
+                    })
 
-            firebase.database().ref(`/${this.user}/${yearAndMonth}/${card}`)
-            .child(`${this.peopleSelected}`)
-            .update({
-                [this.item]: parseFloat(this.valueItem)
-            })
+                } else {
+                    this.newMonthForExpense(card, yearAndMonth)
+                }
+            });
         },
 
         newMonthForExpense(card, yearAndMonth) {
@@ -92,10 +98,10 @@ export default {
             .child(`${card}`)
             .update({
                 cartao: this.cardSelected,
-                cor: "000",
-                id: 1,
+                cor: this.dataApi[card].cor,
+                id: this.dataApi[card].id,
                 [this.peopleSelected]: {
-                    [this.item]: parseFloat(this.valueItem)
+                    [this.item]: parseFloat(this.valueItem),
                 }
             }) 
         }

@@ -63,7 +63,6 @@ export default {
         getInvoice() {
             this.params = this.$route.params.id
             this.user = this.$store.state.user.data.email.split("@")[0]
-
             const monthAndYearFilter = this.month + this.year
 
             fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${this.user}/${monthAndYearFilter}/banco${this.params}.json`)
