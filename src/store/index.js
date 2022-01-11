@@ -9,6 +9,8 @@ export default new Vuex.Store({
       loggedIn: false,
       data: null
     },
+    year: '',
+    month: ''
   },
 
   mutations: {

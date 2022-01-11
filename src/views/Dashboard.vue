@@ -1,11 +1,11 @@
 <template>
     <section class="container">
         <div class="filter">
-            <select v-model="mounthSelected" class="filter-selected">
+            <select v-model="monthSelected" class="filter-selected">
                 <option disabled value="">Selecione o mês</option>
 
-                <option v-for="mounth in mounths" :key="mounth">
-                    {{mounth}}
+                <option v-for="month in months" :key="month">
+                    {{month}}
                 </option>
             </select>
 
@@ -37,20 +37,20 @@ export default {
 
     data() {
         return {
-            mounths: [
-                "Janeiro",
-                "Fevereiro",
-                "Março",
-                "Abril",
-                "Maio",
-                "Junho",
-                "Julho",
-                "Agosto",
-                "Setembro",
-                "Outubro",
-                "Novembro",
-                "Dezembro"
-            ],
+            months: {
+                1: "Janeiro",
+                2: "Fevereiro",
+                3: "Março",
+                4: "Abril",
+                5: "Maio",
+                6: "Junho",
+                7: "Julho",
+                8: "Agosto",
+                9: "Setembro",
+                10: "Outubro",
+                11: "Novembro",
+                12: "Dezembro"
+            },
             years: [
                 "2021",
                 "2022",
@@ -58,34 +58,50 @@ export default {
                 "2024",
                 "2025"
             ],
-            mounthSelected: "",
+            monthSelected: "",
             yearSelected: "",
             dataInvoice: null
         }
     },
 
-    methods: {
-        teste() {
-            
+    watch: {
+        yearSelected() {
+            this.getData()
         },
 
+        monthSelected() {
+            this.getData()
+        }
+    },
+
+    methods: {
         getData() {
+            this.$store.state.month = this.monthSelected.toLowerCase()
+            this.$store.state.year = this.yearSelected.toString()
+
+            const monthAndYearFilter = this.$store.state.month + this.$store.state.year
             const user = this.$store.state.user.data.email.split("@")[0]
-            fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${user}.json`)
+
+            fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${user}/${monthAndYearFilter}.json`)
             .then(req => req.json())
             .then(res => {
-                var result = Object.keys(res).map(function(key) {
-                    return res[key];
-                });
-                this.dataInvoice = result
+                if(res["error"]) {
+                    this.dataInvoice = null
+
+                } else {
+                    this.dataInvoice = Object.keys(res).map(function(key) {
+                        return res[key];
+                    });
+                }
             })
+            .catch(() => this.dataInvoice = null)
         }
     },
 
     created() {
-        setTimeout(() => {
-            this.getData()
-        }, 400);
+        const date = new Date()
+        this.yearSelected = date.getFullYear().toString()
+        this.monthSelected = this.months[`${date.getMonth() + 1}`]
     }
 }
 
@@ -115,6 +131,16 @@ export default {
 
 .not-fund-card a {
     text-decoration: none;
+}
+
+.none {
+    margin-bottom: 40px;
+    font-size: 18px;
+}
+
+.register-card {
+    font-size: 14px;
+    margin-bottom: -30px;
 }
 
 </style>

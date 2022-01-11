@@ -1,7 +1,7 @@
 <template>
     <section class="container">
         <div class="box-invoice" :style="color">
-            <h1 class="titulo-card">Nubank</h1>
+            <h1 class="titulo-card">{{items.cartao}}</h1>
             
             <p class="value-invoice">{{valueTotalInvoice | numeroPreco}}</p>
         </div>
@@ -37,7 +37,7 @@ export default {
 
     data() {
         return {
-            items: null,
+            items: '',
             names: [],
             color: {
                 backgroundColor: "#"
@@ -47,7 +47,9 @@ export default {
             listItem: [],
             listValue: [],
             valuePeopleTotal: 0,
-            valueTotalInvoice: 0
+            valueTotalInvoice: 0,
+            month: this.$store.state.month,
+            year: this.$store.state.year
         }
     },
 
@@ -61,10 +63,12 @@ export default {
         getInvoice() {
             this.params = this.$route.params.id
             this.user = this.$store.state.user.data.email.split("@")[0]
-            fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${this.user}/banco${this.params}.json`)
+
+            const monthAndYearFilter = this.month + this.year
+
+            fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${this.user}/${monthAndYearFilter}/banco${this.params}.json`)
             .then(req => req.json())
             .then(res => {
-                console.log(res)
                 this.items = res
                 this.color.backgroundColor += res["cor"]
                 Object.keys(res).forEach((item) => {
@@ -87,7 +91,7 @@ export default {
             this.listItem = []
             this.valuePeopleTotal = 0
             const namePeople = this.$route.query.name || "Alessa"
-            fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${this.user}/banco${this.params}/${namePeople}.json`)
+            fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${this.user}/${this.month + this.year}/banco${this.params}/${namePeople}.json`)
             .then(req => req.json())
             .then(res => {
                 for (var data in res) {
@@ -139,6 +143,7 @@ export default {
     background-color: #F3F1F3;
     border-radius: 10px;
     padding: 10px;
+    width: 100%;
 }
 
 .invoice-values div {
@@ -162,7 +167,7 @@ export default {
 }
 
 .name-item {
-    width: 135px;
+    width: 100%;
 }
 
 .apagar, .editar {

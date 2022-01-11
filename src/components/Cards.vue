@@ -2,19 +2,21 @@
     <section class="container cards">
         <div v-if="cards">
             <div v-for="(card, key) in cards" :key="card+key">
-                <router-link :to="{ name: 'CardInvoice', params: { id: card['id']}}">
+                <router-link v-if="card['id']" :to="{ name: 'CardInvoice', params: { id: card['id']}}">
                     <div class="box-invoice" :style="{backgroundColor: '#' + card['cor']}">
                         <h1 class="titulo-card">{{card["cartao"]}}</h1>
                         
-                        <p class="value-invoice">R$R$652,30</p>
+                        <p class="value-invoice">{{ calculateTotal(card) | numeroPreco }}</p>
                     </div>
                 </router-link>
             </div>
         </div>
+        
         <div v-else>
             <p class="none">Nenhum cartão cadastrado! :(</p>
 
             <p class="register-card">Cadastre um cartão</p>
+
             <button class="botao">Clique aqui (icon)</button>
         </div>
     </section>
@@ -23,14 +25,19 @@
 <script>
 
 export default {
-
     props: ["cards"],
 
-    data() {
-        return {
-            cardColor1: "#8E2C91",
-            cardColor2: "#222222",
-            cardColor3: "#DA802D"
+    methods: {
+        calculateTotal(params) {
+            var total = 0
+            Object.keys(params).forEach((item) => {
+                if(item != "cartao" && item != "cor" && item != "id") {
+                    for(var key in params[item]) {
+                        total += parseFloat(params[item][key])
+                    }
+                }
+            })
+            return total
         }
     }
 }
