@@ -1,6 +1,7 @@
 <template>
     <section class="container">
         <h1 class="titulo">Novo gasto</h1>
+
         <form action="#" @submit.prevent="newExpense" class="new-expense">
             <label for="card">Cartão</label>
             <select v-model="cardSelected" id="card" class="filter-selected">
@@ -43,58 +44,57 @@ export default {
             peoples: [],
             item: "",
             valueItem: "",
-            user: "",
-            month: this.$store.state.month,
-            year: this.$store.state.year,
+            user: this.$store.state.user.data.email.split("@")[0],
             objectCard: {},
             objectDataCards: [],
-            listMonthRegistered: []
+            listMonthRegistered: [],
+            yearAndMonth: this.$store.state.month + this.$store.state.year
         }
     },
 
     methods: {
         getDataCards() {
-            this.user = this.$store.state.user.data.email.split("@")[0]
-            const yearAndMonth = this.month + this.year
-            
-            fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${this.user}/${yearAndMonth}/.json`)
-            .then(req => req.json())
-            .then(res => {
-                Object.keys(res).forEach((item) => {
-                    Object.keys(res[item]).forEach((names) => {
+            firebase.database()
+            .ref(`${this.user}/${this.yearAndMonth}`)
+            .once("value", snapshot => {
+                Object.keys(snapshot.val()).forEach((item) => {
+                    Object.keys(snapshot.val()[item]).forEach((names) => {
                         if(names != "cartao" && names != "cor" && names != "id") {
                             if(!this.peoples.includes(names)) {
                                 this.peoples.push(names)
                             }
                         }
                     })
-                    this.dataApi = res
-                    this.cards.push(res[item]["cartao"])
-                    this.objectCard[res[item]["cartao"]] = item 
+                    this.dataApi = snapshot.val()
+                    this.cards.push(snapshot.val()[item]["cartao"])
+                    this.objectCard[snapshot.val()[item]["cartao"]] = item 
                 })
             })
         },
 
         newExpense() {
             const card = this.objectCard[this.cardSelected]
-            const yearAndMonth = this.month + this.year
 
-            firebase.database().ref(`/${this.user}/${yearAndMonth}/${card}`).once("value", snapshot => {
+            firebase.database()
+            .ref(`/${this.user}/${this.yearAndMonth}/${card}`)
+            .once("value", snapshot => {
                 if (snapshot.exists()){
-                    firebase.database().ref(`/${this.user}/${yearAndMonth}/${card}`)
+                    firebase.database()
+                    .ref(`/${this.user}/${this.yearAndMonth}/${card}`)
                     .child(`${this.peopleSelected}`)
                     .update({
                         [this.item]: parseFloat(this.valueItem)
                     })
 
                 } else {
-                    this.newMonthForExpense(card, yearAndMonth)
+                    this.newMonthForExpense(card)
                 }
             });
         },
 
-        newMonthForExpense(card, yearAndMonth) {
-            firebase.database().ref(`/${this.user}/${yearAndMonth}`)
+        newMonthForExpense(card) {
+            firebase.database()
+            .ref(`/${this.user}/${this.yearAndMonth}`)
             .child(`${card}`)
             .update({
                 cartao: this.cardSelected,

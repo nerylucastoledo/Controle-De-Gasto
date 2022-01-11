@@ -38,7 +38,7 @@ export default {
         register() {
             firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
             .then(data => {
-                firebase.auth().currentUser.updateProfile({displayName: this.nome})
+                firebase.auth().currentUser.updateProfile({displayName: this.name})
                 this.$store.dispatch("fetchUser", data)
                 .then(() => {
                     setTimeout(() => {

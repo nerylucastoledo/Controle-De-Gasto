@@ -3,7 +3,7 @@
         <div v-if="cards">
             <div v-for="(card, key) in cards" :key="card+key">
                 <router-link v-if="card['id']" :to="{ name: 'CardInvoice', params: { id: card['id']}}">
-                    <div class="box-invoice" :style="{backgroundColor: '#' + card['cor']}">
+                    <div class="box-invoice" :style="{backgroundColor: card['cor']}">
                         <h1 class="titulo-card">{{card["cartao"]}}</h1>
                         
                         <p class="value-invoice">{{ calculateTotal(card) | numeroPreco }}</p>

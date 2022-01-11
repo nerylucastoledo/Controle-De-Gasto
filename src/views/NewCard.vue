@@ -3,8 +3,6 @@
         <h1 class="titulo">Novo cartão</h1>
 
         <form action="#" @submit.prevent="newCardSubmit" class="new-expense">
-            <label for="newCard">Nome do cartão</label>
-            <input type="text" id="newCard" v-model="newCard" placeholder="Nome do cartão">
 
             <label for="colorCard">Cor do cartão</label>
             <div class="color-input">
@@ -13,24 +11,52 @@
                 <p class="color-card" :style="{backgroundColor: colorCard}"></p>
             </div>
 
+            <label for="newCard">Nome do cartão</label>
+            <input type="text" id="newCard" v-model="newCard" placeholder="Nome do cartão">
+
            <button class="botao" type="submit">Cadastrar</button>
         </form>
     </section>
 </template>
 
 <script>
+
+import * as firebase from 'firebase';
+
 export default {
     data() {
         return {
-            newCard: "",
-            colorCard: ""
+            newCard: '',
+            colorCard: '',
+            monthAndYearFilter: this.$store.state.month + this.$store.state.year,
+            user: this.$store.state.user.data.email.split("@")[0],
+            lastIdCard: ''
         }
     },
 
     methods: {
         newCardSubmit() {
-            console.log(this.colorCard)
+            firebase.database()
+            .ref(`/${this.user}/${this.monthAndYearFilter}`)
+            .child(`banco${this.lastIdCard.toString()}`)
+            .update({
+                cartao: this.newCard,
+                cor: this.colorCard,
+                id: this.lastIdCard.toString()
+            })
         }
+    },
+
+    async created() {
+        var aux = []
+        await firebase.database()
+        .ref(`${this.user}/${this.monthAndYearFilter}`)
+        .once("value", snapshot => {
+            Object.keys(snapshot.val()).forEach((item) => {
+                aux.push(item)
+            })
+        })
+        this.lastIdCard = parseInt(aux.length) + 1
     }
 }
 </script>

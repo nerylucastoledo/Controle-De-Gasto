@@ -26,6 +26,7 @@
 <script>
 
 import Cards from '../components/Cards.vue'
+import * as firebase from 'firebase';
 
 export default {
 
@@ -60,7 +61,9 @@ export default {
             ],
             monthSelected: "",
             yearSelected: "",
-            dataInvoice: null
+            dataInvoice: null,
+            monthAndYearFilter: this.$store.state.month + this.$store.state.year,
+            user: this.$store.state.user.data.email.split("@")[0]
         }
     },
 
@@ -79,22 +82,16 @@ export default {
             this.$store.state.month = this.monthSelected.toLowerCase()
             this.$store.state.year = this.yearSelected.toString()
 
-            const monthAndYearFilter = this.$store.state.month + this.$store.state.year
-            const user = this.$store.state.user.data.email.split("@")[0]
-
-            fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${user}/${monthAndYearFilter}.json`)
-            .then(req => req.json())
-            .then(res => {
-                if(res["error"]) {
+            firebase.database()
+            .ref(`${this.user}/${this.monthAndYearFilter}`)
+            .once("value", snapshot => {
+                if(snapshot.val() === null) {
                     this.dataInvoice = null
 
                 } else {
-                    this.dataInvoice = Object.keys(res).map(function(key) {
-                        return res[key];
-                    });
+                    this.dataInvoice = Object.keys(snapshot.val()).map((key) => snapshot.val()[key])
                 }
             })
-            .catch(() => this.dataInvoice = null)
         }
     },
 

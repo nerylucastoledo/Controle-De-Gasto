@@ -8,7 +8,7 @@
 
         <div class="invoice">
             <ul class="invoice-people">
-                <li :style="color" v-for="name in names" :key="name" @click="filterName(name)">
+                <li v-for="name in names" :key="name" :style="color" @click="filterName(name)">
                     {{name}}
                 </li>
             </ul>
@@ -31,6 +31,8 @@
 
 <script>
 
+import * as firebase from 'firebase';
+
 export default {
 
     name: "CardInvoice",
@@ -40,16 +42,15 @@ export default {
             items: '',
             names: [],
             color: {
-                backgroundColor: "#"
+                backgroundColor: ''
             },
             params: '',
-            user: '',
+            user: this.$store.state.user.data.email.split("@")[0],
             listItem: [],
             listValue: [],
             valuePeopleTotal: 0,
             valueTotalInvoice: 0,
-            month: this.$store.state.month,
-            year: this.$store.state.year
+            monthAndYearFilter: this.$store.state.month + this.$store.state.year
         }
     },
 
@@ -62,19 +63,19 @@ export default {
     methods: {
         getInvoice() {
             this.params = this.$route.params.id
-            this.user = this.$store.state.user.data.email.split("@")[0]
-            const monthAndYearFilter = this.month + this.year
 
-            fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${this.user}/${monthAndYearFilter}/banco${this.params}.json`)
-            .then(req => req.json())
-            .then(res => {
-                this.items = res
-                this.color.backgroundColor += res["cor"]
-                Object.keys(res).forEach((item) => {
+            firebase.database()
+            .ref(`${this.user}/${this.monthAndYearFilter}/banco${this.params}`)
+            .once("value", snapshot => {
+                this.items = snapshot.val()
+                this.color.backgroundColor = snapshot.val()["cor"]
+
+                Object.keys(snapshot.val()).forEach((item) => {
                     if(item != "cartao" && item != "cor" && item != "id") {
                         this.names.push(item)
-                        for(var key in res[item]) {
-                            this.valueTotalInvoice += parseFloat(res[item][key])
+                        
+                        for(var key in snapshot.val()[item]) {
+                            this.valueTotalInvoice += parseFloat(snapshot.val()[item][key])
                         }
                     }
                 })
@@ -82,24 +83,29 @@ export default {
         },
 
         filterName(name) {
-            this.$router.push({query: {name: name}})
+            this.$router.push({
+                query: {
+                    name: name
+                }
+            })
         },
 
         loadingInvoice() {
             this.listValue = []
             this.listItem = []
             this.valuePeopleTotal = 0
+
             const namePeople = this.$route.query.name || "Alessa"
-            fetch(`https://meusgastos-d1929-default-rtdb.firebaseio.com/${this.user}/${this.month + this.year}/banco${this.params}/${namePeople}.json`)
-            .then(req => req.json())
-            .then(res => {
-                for (var data in res) {
+
+            firebase.database()
+            .ref(`${this.user}/${this.monthAndYearFilter}/banco${this.params}/${namePeople}`)
+            .once("value", snapshot => {
+                for (var data in snapshot.val()) {
                     this.listItem.push(data)
-                    this.listValue.push(res[data])
+                    this.listValue.push(snapshot.val()[data])
                 }
-                this.listValue.forEach((item) => {
-                    this.valuePeopleTotal += parseFloat(item)
-                })
+
+                this.listValue.forEach((item) => this.valuePeopleTotal += parseFloat(item))
             })
         },
     },
