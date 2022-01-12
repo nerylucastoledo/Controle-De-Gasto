@@ -111,7 +111,6 @@ export default {
 
                     this.writeApiData(snapshot.val())
                 }
-
             })
         },
 
