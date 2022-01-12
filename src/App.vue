@@ -3,7 +3,9 @@
 
     <Header/>
 
-    <router-view/>
+    <transition mode="out-in">
+      <router-view />
+    </transition>
   </div>
 </template>
 
@@ -16,12 +18,11 @@ export default {
     Header,
   },
 
-  mounted() {
-    setTimeout(() => {
-      if(!this.$store.state.user.loggedIn) {
-        this.$router.replace({ name: "Login" });
-      }
-    }, 500)
+  created() {
+    const loginUser = localStorage.getItem('login')
+    if(!loginUser) {
+      this.$router.replace({ name: "Login" });
+    }
   }
 }
 </script>
@@ -67,6 +68,21 @@ body, a, ul, li, h1, h2, h3, p, img {
   padding: 10px 0;
   display: block;
   margin: 40px auto 40px;
+}
+
+.v-enter,
+.v-leave-to {
+  opacity: 0;
+}
+.v-enter {
+  transform: translate3d(0, -20px, 0);
+}
+.v-leave-to {
+  transform: translate3d(0, 20px, 0);
+}
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.3s;
 }
 
 </style>

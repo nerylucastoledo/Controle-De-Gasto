@@ -1,39 +1,48 @@
 <template>
     <section class="container">
-        <div class="filter">
-            <select v-model="monthSelected" class="filter-selected">
-                <option disabled value="">Selecione o mês</option>
+        <div v-if="!loading">
+            <div class="filter">
+                <select v-model="monthSelected" class="filter-selected">
+                    <option disabled value="">Selecione o mês</option>
 
-                <option v-for="month in months" :key="month">
-                    {{month}}
-                </option>
-            </select>
+                    <option v-for="month in months" :key="month">
+                        {{month}}
+                    </option>
+                </select>
 
-            <select v-model="yearSelected" class="filter-selected">
-                <option disabled value="">Selecione o ano</option>
+                <select v-model="yearSelected" class="filter-selected">
+                    <option disabled value="">Selecione o ano</option>
 
-                <option v-for="year in years" :key="year">
-                    {{year}}
-                </option>
-            </select>
+                    <option v-for="year in years" :key="year">
+                        {{year}}
+                    </option>
+                </select>
+            </div>
+
+            <Cards :cards="dataInvoice"></Cards>
+
         </div>
 
-        <Cards :cards="dataInvoice"></Cards>
+        <div v-else>
+            <Loading/>
+        </div>
 
     </section>
+
 </template>
 
 <script>
 
 import Cards from '../components/Cards.vue'
 import * as firebase from 'firebase';
-
+import Loading from '../components/Loading.vue'
 export default {
 
     name: "Dashboard",
 
     components: {
-        Cards
+        Cards,
+        Loading,
     },
 
     data() {
@@ -62,9 +71,18 @@ export default {
             monthSelected: "",
             yearSelected: "",
             dataInvoice: null,
-            monthAndYearFilter: this.$store.state.month + this.$store.state.year,
-            user: this.$store.state.user.data.email.split("@")[0]
+            loading: 1,
         }
+    },
+
+    computed: {
+        user() {
+            return this.$store.state.user.data.email.split("@")[0]
+        },
+
+        month() {
+            return this.$store.state.month + this.$store.state.year
+        },
     },
 
     watch: {
@@ -78,28 +96,51 @@ export default {
     },
 
     methods: {
-        getData() {
+        async getData() {
             this.$store.state.month = this.monthSelected.toLowerCase()
             this.$store.state.year = this.yearSelected.toString()
 
-            firebase.database()
-            .ref(`${this.user}/${this.monthAndYearFilter}`)
+            await firebase.database()
+            .ref(`${this.user}/${this.month}`)
             .once("value", snapshot => {
                 if(snapshot.val() === null) {
                     this.dataInvoice = null
 
                 } else {
                     this.dataInvoice = Object.keys(snapshot.val()).map((key) => snapshot.val()[key])
+
+                    this.writeApiData(snapshot.val())
                 }
+
             })
+        },
+
+        writeApiData(datas) {
+            Object.keys(datas).forEach((item) => {
+                this.$store.dispatch('addRelationshipCardAndBank', [datas[item]["cartao"], item])
+
+                Object.keys(datas[item]).forEach((names) => {
+                    for(var key in datas[item][names]) {
+                        const category = datas[item][names][key]["categoria"]
+                        this.$store.dispatch('addDatasCategorys', category)
+
+                        this.$store.dispatch('addNamesPeoples', names)
+                    }
+                })
+                this.$store.dispatch('addMyCards', datas[item]["cartao"])
+                this.$store.dispatch('addDatasApi', datas)
+            })
+            this.loading = 0
         }
     },
 
-    created() {
-        const date = new Date()
-        this.yearSelected = date.getFullYear().toString()
-        this.monthSelected = this.months[`${date.getMonth() + 1}`]
-    }
+    mounted() {
+        setTimeout(() => {
+            const date = new Date()
+            this.yearSelected = date.getFullYear().toString()
+            this.monthSelected = this.months[`${date.getMonth() + 1}`]
+        }, 600)
+    },
 }
 
 </script>

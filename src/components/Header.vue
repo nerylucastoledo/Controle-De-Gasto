@@ -12,7 +12,7 @@
             </div>
 
             <ul class="menu">
-                <li v-if="this.$store.state.user.loggedIn" @click="logout">
+                <li v-if="this.user" @click="logout">
                     <p>Sair</p>
                 </li>
 
@@ -41,6 +41,13 @@
 import firebase from "firebase";
 
 export default {
+
+    computed: {
+        user() {
+            return this.$store.state.user.loggedIn
+        },
+    },
+
     methods: {
         abrirMenu() {
             document.querySelector('.menu').classList.toggle('ativo')

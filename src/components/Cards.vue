@@ -33,7 +33,7 @@ export default {
             Object.keys(params).forEach((item) => {
                 if(item != "cartao" && item != "cor" && item != "id") {
                     for(var key in params[item]) {
-                        total += parseFloat(params[item][key])
+                        total += parseFloat(params[item][key]["valor"])
                     }
                 }
             })

@@ -1,7 +1,6 @@
 <template>
     <section class="container">
         <h1 class="titulo">Novo gasto</h1>
-
         <form action="#" @submit.prevent="newExpense" class="new-expense">
             <label for="card">Cartão</label>
             <select v-model="cardSelected" id="card" class="filter-selected">
@@ -22,6 +21,14 @@
             <label for="item">Item</label>
             <input type="text" id="item" v-model="item" placeholder="O que?">
 
+            <label for="category">Categoria</label>
+            <select v-model="categorySelected" id="category" class="filter-selected">
+                <option disabled value="">Selecione a pessoa</option>
+                <option v-for="category in categorys" :key="category">
+                    {{category}}
+                </option>
+            </select>
+
             <label for="valueItem">Valor</label>
             <input type="number" id="valueItem" step="0.01" v-model="valueItem" placeholder="Qual valor?">
 
@@ -37,53 +44,60 @@ import * as firebase from 'firebase';
 export default {
     data() {
         return {
-            dataApi: '',
-            cardSelected: {},
-            cards: [],
+            cardSelected: "",
             peopleSelected: "",
-            peoples: [],
             item: "",
+            categorySelected: "",
             valueItem: "",
-            user: this.$store.state.user.data.email.split("@")[0],
-            objectCard: {},
-            objectDataCards: [],
-            listMonthRegistered: [],
-            yearAndMonth: this.$store.state.month + this.$store.state.year
+        }
+    },
+
+    computed: {
+        user() {
+            return this.$store.state.user.data.email.split("@")[0]
+        },
+
+        month() {
+            return this.$store.state.month + this.$store.state.year
+        },
+
+        cards() {
+            return this.$store.state.cards
+        },
+
+        categorys() {
+            return this.$store.state.categorys
+        },
+
+        peoples() {
+            return this.$store.state.peoples
+        },
+
+        datasApi() {
+            return this.$store.state.datasApi
+        },
+
+        bankAndCardRelationship() {
+            return this.$store.state.bankAndCardRelationship
         }
     },
 
     methods: {
-        getDataCards() {
-            firebase.database()
-            .ref(`${this.user}/${this.yearAndMonth}`)
-            .once("value", snapshot => {
-                Object.keys(snapshot.val()).forEach((item) => {
-                    Object.keys(snapshot.val()[item]).forEach((names) => {
-                        if(names != "cartao" && names != "cor" && names != "id") {
-                            if(!this.peoples.includes(names)) {
-                                this.peoples.push(names)
-                            }
-                        }
-                    })
-                    this.dataApi = snapshot.val()
-                    this.cards.push(snapshot.val()[item]["cartao"])
-                    this.objectCard[snapshot.val()[item]["cartao"]] = item 
-                })
-            })
-        },
-
         newExpense() {
-            const card = this.objectCard[this.cardSelected]
+            const card = this.bankAndCardRelationship[this.cardSelected]
 
             firebase.database()
-            .ref(`/${this.user}/${this.yearAndMonth}/${card}`)
+            .ref(`/${this.user}/${this.month}/${card}`)
             .once("value", snapshot => {
                 if (snapshot.exists()){
                     firebase.database()
-                    .ref(`/${this.user}/${this.yearAndMonth}/${card}`)
+                    .ref(`/${this.user}/${this.month}/${card}`)
                     .child(`${this.peopleSelected}`)
                     .update({
-                        [this.item]: parseFloat(this.valueItem)
+                        [this.item]: {
+                            categoria: this.categorySelected,
+                            valor: parseFloat(this.valueItem)
+                        }
                     })
 
                 } else {
@@ -94,22 +108,21 @@ export default {
 
         newMonthForExpense(card) {
             firebase.database()
-            .ref(`/${this.user}/${this.yearAndMonth}`)
+            .ref(`/${this.user}/${this.month}`)
             .child(`${card}`)
             .update({
                 cartao: this.cardSelected,
-                cor: this.dataApi[card].cor,
-                id: this.dataApi[card].id,
+                cor: this.datasApi[card].cor,
+                id: this.datasApi[card].id,
                 [this.peopleSelected]: {
-                    [this.item]: parseFloat(this.valueItem),
+                    [this.item]: {
+                        categoria: this.categorySelected,
+                        valor: parseFloat(this.valueItem)
+                    }
                 }
-            }) 
+            })
         }
     },
-
-    created() {
-        this.getDataCards()
-    }
 }
 </script>
 

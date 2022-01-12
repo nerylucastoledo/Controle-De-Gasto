@@ -13,16 +13,18 @@
                 </li>
             </ul>
 
-            <div v-if="listItem.length" class="invoice-values">
-                <div v-for="(item, index) in listItem" :key="item">
-                    <p class="name-item">{{item}}</p>
+            <transition mode="out-in">
+                <div v-if="listItem.length" class="invoice-values">
+                    <div v-for="(item, index) in listItem" :key="item">
+                        <p class="name-item">{{item}}</p>
 
-                    <p>{{listValue[index] | numeroPreco}}</p>
+                        <p>{{listValue[index] | numeroPreco}}</p>
 
-                    <span class="apagar">X</span>
-                    <span class="editar">E</span>
+                        <span class="apagar">X</span>
+                        <span class="editar">E</span>
+                    </div>
                 </div>
-            </div>
+            </transition>
         </div>
 
         <h2 class="total">Total: {{valuePeopleTotal | numeroPreco}}</h2>
@@ -50,8 +52,14 @@ export default {
             listValue: [],
             valuePeopleTotal: 0,
             valueTotalInvoice: 0,
-            monthAndYearFilter: this.$store.state.month + this.$store.state.year
+            firstNameForInvoice: "",
         }
+    },
+
+    computed: {
+        month() {
+            return this.$store.state.month + this.$store.state.year
+        },
     },
 
     watch: {
@@ -65,17 +73,21 @@ export default {
             this.params = this.$route.params.id
 
             firebase.database()
-            .ref(`${this.user}/${this.monthAndYearFilter}/banco${this.params}`)
+            .ref(`${this.user}/${this.month}/banco${this.params}`)
             .once("value", snapshot => {
                 this.items = snapshot.val()
                 this.color.backgroundColor = snapshot.val()["cor"]
 
                 Object.keys(snapshot.val()).forEach((item) => {
                     if(item != "cartao" && item != "cor" && item != "id") {
+                        if(!this.firstNameForInvoice.length) {
+                            this.firstNameForInvoice = item
+                            this.loadingInvoice()
+                        }
                         this.names.push(item)
-                        
+
                         for(var key in snapshot.val()[item]) {
-                            this.valueTotalInvoice += parseFloat(snapshot.val()[item][key])
+                            this.valueTotalInvoice += parseFloat(snapshot.val()[item][key]["valor"])
                         }
                     }
                 })
@@ -95,14 +107,14 @@ export default {
             this.listItem = []
             this.valuePeopleTotal = 0
 
-            const namePeople = this.$route.query.name || "Alessa"
+            const namePeople = this.$route.query.name || this.firstNameForInvoice
 
             firebase.database()
-            .ref(`${this.user}/${this.monthAndYearFilter}/banco${this.params}/${namePeople}`)
+            .ref(`${this.user}/${this.month}/banco${this.params}/${namePeople}`)
             .once("value", snapshot => {
                 for (var data in snapshot.val()) {
                     this.listItem.push(data)
-                    this.listValue.push(snapshot.val()[data])
+                    this.listValue.push(snapshot.val()[data]["valor"])
                 }
 
                 this.listValue.forEach((item) => this.valuePeopleTotal += parseFloat(item))

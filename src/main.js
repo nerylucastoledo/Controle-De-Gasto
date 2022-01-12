@@ -38,5 +38,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 firebase.auth().onAuthStateChanged(user => {
-  store.dispatch("fetchUser", user);
+  if(user.email) {
+    localStorage.setItem('login', true)
+    store.dispatch("fetchUser", user);
+  }
 });
