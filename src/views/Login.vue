@@ -9,7 +9,7 @@
             <input type="email" id="email" v-model="email" placeholder="Digite seu e-mail">
 
             <label for="password">Senha</label>
-            <input type="current-password" id="password" v-model="password" placeholder="Sua senha">
+            <input type="password" id="password" v-model="password" placeholder="Sua senha">
 
             <router-link to="/forgot-password" class="esqueceu-senha">Esqueceu a senha?</router-link>
 

@@ -3,7 +3,7 @@
         <h1 class="titulo">Crie sua conta</h1>
 
         <form action="#" @submit.prevent="register">
-            <label for="name">Seu nome</label>
+            <label for="name">Nome e sobrenome</label>
             <input type="text" id="name" v-model="name" placeholder="Digite seu nome">
 
             <label for="email">Seu e-mail</label>
@@ -36,14 +36,15 @@ export default {
 
     methods: {
         register() {
+            console.log(this.name)
             firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
             .then(data => {
                 firebase.auth().currentUser.updateProfile({displayName: this.name})
-                this.$store.dispatch("fetchUser", data)
                 .then(() => {
+                    this.$store.dispatch("fetchUser", data)
                     setTimeout(() => {
                         this.$router.replace({ name: "Dashboard" });
-                    }, 500)
+                    }, 800)
                 });
             })
             .catch(err => {

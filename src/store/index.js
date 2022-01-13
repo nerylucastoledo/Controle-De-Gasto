@@ -34,6 +34,10 @@ export default new Vuex.Store({
     ADD_DATA_CATEGORYS(state, value) {
       if(!state.categorys.includes(value)) {
         state.categorys.push(value)
+      } else {
+        if(!state.categorys.includes("Novo")) {
+          state.categorys.push("Novo")
+        }
       }
     },
 
@@ -41,6 +45,10 @@ export default new Vuex.Store({
       if(value != "cartao" && value != "cor" && value != "id") {
         if(!state.peoples.includes(value)) {
           state.peoples.push(value)
+        }
+      } else {
+        if(!state.peoples.includes("Novo")) {
+          state.peoples.push("Novo")
         }
       }
     },

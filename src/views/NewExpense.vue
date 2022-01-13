@@ -18,43 +18,66 @@
                 </option>
             </select>
 
+            <div v-if="peopleSelected === 'Novo'">
+                <label for="people">Nome da pessoa</label>
+                <input type="text" id="people" v-model="namePeople" placeholder="Nome da pessoa?">
+            </div>
+
             <label for="item">Item</label>
             <input type="text" id="item" v-model="item" placeholder="O que?">
 
             <label for="category">Categoria</label>
             <select v-model="categorySelected" id="category" class="filter-selected">
-                <option disabled value="">Selecione a pessoa</option>
+                <option disabled value="">Selecione a categoria</option>
                 <option v-for="category in categorys" :key="category">
                     {{category}}
                 </option>
             </select>
+
+            <div v-if="categorySelected === 'Novo'">
+                <label for="category">Nome da categoria</label>
+                <input type="text" id="category" v-model="nameCategory" placeholder="Categoria?">
+            </div>
 
             <label for="valueItem">Valor</label>
             <input type="number" id="valueItem" step="0.01" v-model="valueItem" placeholder="Qual valor?">
 
            <button class="botao" type="submit">Inserir</button>
         </form>
+
+        <div v-if="notification">
+            <Notification/>
+        </div>
     </section>
 </template>
 
 <script>
 
 import * as firebase from 'firebase';
+import Notification from '../components/Notifcation.vue'
 
 export default {
+
+    components: {
+        Notification
+    },
+
     data() {
         return {
             cardSelected: "",
             peopleSelected: "",
+            namePeople: "",
             item: "",
             categorySelected: "",
+            nameCategory: "",
             valueItem: "",
+            notification: "",
         }
     },
 
     computed: {
-        user() {
-            return this.$store.state.user.data.email.split("@")[0]
+        userName() {
+            return this.$store.state.user.data.displayName.replace(' ', '')
         },
 
         month() {
@@ -85,19 +108,23 @@ export default {
     methods: {
         newExpense() {
             const card = this.bankAndCardRelationship[this.cardSelected]
+            const newExpenseForPeople = this.peopleSelected === 'Novo' ? this.namePeople : this.peopleSelected
+            const newExpenseForCategory = this.categorySelected === 'Novo' ? this.nameCategory : this.categorySelected
 
             firebase.database()
-            .ref(`/${this.user}/${this.month}/${card}`)
+            .ref(`/${this.userName}/${this.month}/${card}`)
             .once("value", snapshot => {
                 if (snapshot.exists()){
                     firebase.database()
-                    .ref(`/${this.user}/${this.month}/${card}`)
-                    .child(`${this.peopleSelected}`)
+                    .ref(`/${this.userName}/${this.month}/${card}`)
+                    .child(`${newExpenseForPeople}`)
                     .update({
                         [this.item]: {
-                            categoria: this.categorySelected,
+                            categoria: newExpenseForCategory,
                             valor: parseFloat(this.valueItem)
                         }
+                    }).then(() => {
+                        this.showNotificationSuccess()
                     })
 
                 } else {
@@ -108,7 +135,7 @@ export default {
 
         newMonthForExpense(card) {
             firebase.database()
-            .ref(`/${this.user}/${this.month}`)
+            .ref(`/${this.userName}/${this.month}`)
             .child(`${card}`)
             .update({
                 cartao: this.cardSelected,
@@ -120,7 +147,16 @@ export default {
                         valor: parseFloat(this.valueItem)
                     }
                 }
+            }).then(() => {
+                this.showNotificationSuccess()
             })
+        },
+
+        showNotificationSuccess() {
+            this.notification = true
+            setTimeout(() => {
+                this.$router.replace({ name: "Dashboard" });
+            }, 700)
         }
     },
 }

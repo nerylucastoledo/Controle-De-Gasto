@@ -1,7 +1,6 @@
 <template>
     <section class="container">
         <h1 class="titulo">Novo cartão</h1>
-
         <form action="#" @submit.prevent="newCardSubmit" class="new-expense">
 
             <label for="colorCard">Cor do cartão</label>
@@ -16,33 +15,56 @@
 
            <button class="botao" type="submit">Cadastrar</button>
         </form>
+
+        <div v-if="notification">
+            <Notification/>
+        </div>
     </section>
 </template>
 
 <script>
 
 import * as firebase from 'firebase';
+import Notification from '../components/Notifcation.vue'
 
 export default {
     data() {
         return {
             newCard: '',
             colorCard: '',
-            monthAndYearFilter: this.$store.state.month + this.$store.state.year,
-            user: this.$store.state.user.data.email.split("@")[0],
-            lastIdCard: ''
+            lastIdCard: '',
+            notification: false
         }
+    },
+
+    components: {
+        Notification
+    },
+
+    computed: {
+        userName() {
+            return this.$store.state.user.data.displayName.replace(' ', '')
+        },
+
+        month() {
+            return this.$store.state.month + this.$store.state.year
+        },
     },
 
     methods: {
         newCardSubmit() {
             firebase.database()
-            .ref(`/${this.user}/${this.monthAndYearFilter}`)
+            .ref(`/${this.userName}/${this.month}`)
             .child(`banco${this.lastIdCard.toString()}`)
             .update({
                 cartao: this.newCard,
                 cor: this.colorCard,
                 id: this.lastIdCard.toString()
+            }).then(() => {
+                this.notification = true
+                setTimeout(() => {
+                    this.$router.replace({ name: "Dashboard" });
+                }, 1000);
             })
         }
     },
@@ -50,13 +72,15 @@ export default {
     async created() {
         var aux = []
         await firebase.database()
-        .ref(`${this.user}/${this.monthAndYearFilter}`)
+        .ref(`${this.userName}/${this.month}`)
         .once("value", snapshot => {
-            Object.keys(snapshot.val()).forEach((item) => {
-                aux.push(item)
-            })
+            if(snapshot.exists()) {
+                Object.keys(snapshot.val()).forEach((item) => {
+                    aux.push(item)
+                })
+            }
         })
-        this.lastIdCard = parseInt(aux.length) + 1
+        this.lastIdCard = parseInt(aux.length) ? parseInt(aux.length) + 1 : 0
     }
 }
 </script>

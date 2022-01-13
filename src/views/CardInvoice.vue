@@ -47,7 +47,6 @@ export default {
                 backgroundColor: ''
             },
             params: '',
-            user: this.$store.state.user.data.email.split("@")[0],
             listItem: [],
             listValue: [],
             valuePeopleTotal: 0,
@@ -57,6 +56,10 @@ export default {
     },
 
     computed: {
+        userName() {
+            return this.$store.state.user.data.displayName.replace(' ', '')
+        },
+
         month() {
             return this.$store.state.month + this.$store.state.year
         },
@@ -73,7 +76,7 @@ export default {
             this.params = this.$route.params.id
 
             firebase.database()
-            .ref(`${this.user}/${this.month}/banco${this.params}`)
+            .ref(`${this.userName}/${this.month}/banco${this.params}`)
             .once("value", snapshot => {
                 this.items = snapshot.val()
                 this.color.backgroundColor = snapshot.val()["cor"]
@@ -110,13 +113,14 @@ export default {
             const namePeople = this.$route.query.name || this.firstNameForInvoice
 
             firebase.database()
-            .ref(`${this.user}/${this.month}/banco${this.params}/${namePeople}`)
+            .ref(`${this.userName}/${this.month}/banco${this.params}/${namePeople}`)
             .once("value", snapshot => {
                 for (var data in snapshot.val()) {
-                    this.listItem.push(data)
-                    this.listValue.push(snapshot.val()[data]["valor"])
+                    if(data != "cartao" && data != "cor" && data != "id") {
+                        this.listItem.push(data)
+                        this.listValue.push(snapshot.val()[data]["valor"])
+                    }
                 }
-
                 this.listValue.forEach((item) => this.valuePeopleTotal += parseFloat(item))
             })
         },

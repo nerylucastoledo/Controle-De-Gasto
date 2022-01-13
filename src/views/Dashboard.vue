@@ -76,8 +76,8 @@ export default {
     },
 
     computed: {
-        user() {
-            return this.$store.state.user.data.email.split("@")[0]
+        userName() {
+            return this.$store.state.user.data.displayName.replace(' ', '')
         },
 
         month() {
@@ -101,10 +101,11 @@ export default {
             this.$store.state.year = this.yearSelected.toString()
 
             await firebase.database()
-            .ref(`${this.user}/${this.month}`)
+            .ref(`${this.userName}/${this.month}`)
             .once("value", snapshot => {
                 if(snapshot.val() === null) {
                     this.dataInvoice = null
+                    this.loading = 0
 
                 } else {
                     this.dataInvoice = Object.keys(snapshot.val()).map((key) => snapshot.val()[key])
@@ -138,7 +139,7 @@ export default {
             const date = new Date()
             this.yearSelected = date.getFullYear().toString()
             this.monthSelected = this.months[`${date.getMonth() + 1}`]
-        }, 600)
+        }, 700)
     },
 }
 
