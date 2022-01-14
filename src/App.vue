@@ -20,6 +20,7 @@ export default {
 
   created() {
     const loginUser = localStorage.getItem('login')
+    this.$store.state.user.displayName = localStorage.getItem('userName')
     if(!loginUser) {
       this.$router.replace({ name: "Login" });
     }

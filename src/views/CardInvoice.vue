@@ -21,7 +21,9 @@
                         <p>{{listValue[index] | numeroPreco}}</p>
 
                         <span class="apagar">X</span>
-                        <span class="editar">E</span>
+                        <span class="editar">
+                            <font-awesome-icon icon="edit" size="1x"/>
+                        </span>
                     </div>
                 </div>
             </transition>
@@ -193,13 +195,13 @@ export default {
 
 .apagar, .editar {
     position: absolute;
-    width: 15px;
-    height: 15px;
     top: 0px;
+    width: 15px;
     border-radius: 20px;
     color: #fff;
     font-size: 14px;
     text-align: center;
+    padding: 1px;
 }
 
 .editar {
@@ -208,7 +210,7 @@ export default {
 
 .apagar {
     background: #FF0000;
-    right: 10px;
+    right: 5px;
 }
 
 .total {

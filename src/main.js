@@ -3,6 +3,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import * as firebase from 'firebase';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faEdit } from '@fortawesome/free-solid-svg-icons'
 
 Vue.config.productionTip = false
 
@@ -11,6 +14,12 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+library.add([
+  faEdit
+])
+
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.filter("numeroPreco", valor => {
   valor = Number(valor)
