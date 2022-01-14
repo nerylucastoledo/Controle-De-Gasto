@@ -21,7 +21,7 @@
                         <p>{{listValue[index] | numeroPreco}}</p>
 
                         <span class="apagar">X</span>
-                        <span class="editar">
+                        <span class="editar" @click="openModal(item)">
                             <font-awesome-icon icon="edit" size="1x"/>
                         </span>
                     </div>
@@ -30,16 +30,32 @@
         </div>
 
         <h2 class="total">Total: {{valuePeopleTotal | numeroPreco}}</h2>
+
+        <div class="formulario">
+            <div>
+                <p class="fechar" @click="fecharModalFormulario">X</p>
+                <Modal>
+                    <div>
+                        <button class="btn btn-login" type="submit" @click.prevent="atualizarDados">Atualizar Item</button>
+                    </div>
+                </Modal>
+            </div>
+        </div>
     </section>
 </template>
 
 <script>
 
 import * as firebase from 'firebase';
+import Modal from '../components/Modal.vue'
 
 export default {
 
     name: "CardInvoice",
+
+    components: {
+        Modal
+    },
 
     data() {
         return {
@@ -54,6 +70,8 @@ export default {
             valuePeopleTotal: 0,
             valueTotalInvoice: 0,
             firstNameForInvoice: "",
+            theLastIdCard: '',
+            namePeople: '',
         }
     },
 
@@ -84,6 +102,7 @@ export default {
                 this.color.backgroundColor = snapshot.val()["cor"]
 
                 Object.keys(snapshot.val()).forEach((item) => {
+                    this.theLastIdCard = snapshot.val()["id"]
                     if(item != "cartao" && item != "cor" && item != "id") {
                         if(!this.firstNameForInvoice.length) {
                             this.firstNameForInvoice = item
@@ -112,10 +131,10 @@ export default {
             this.listItem = []
             this.valuePeopleTotal = 0
 
-            const namePeople = this.$route.query.name || this.firstNameForInvoice
+            this.namePeople = this.$route.query.name || this.firstNameForInvoice
 
             firebase.database()
-            .ref(`${this.userName}/${this.month}/banco${this.params}/${namePeople}`)
+            .ref(`${this.userName}/${this.month}/banco${this.params}/${this.namePeople}`)
             .once("value", snapshot => {
                 for (var data in snapshot.val()) {
                     if(data != "cartao" && data != "cor" && data != "id") {
@@ -126,6 +145,25 @@ export default {
                 this.listValue.forEach((item) => this.valuePeopleTotal += parseFloat(item))
             })
         },
+
+        fecharModalFormulario() {
+            document.querySelector('.formulario').style.display = 'none'
+        },
+
+        openModal(dataForEdit) {
+            document.querySelector('.formulario').style.display = 'block'
+            this.editData(dataForEdit)
+        },
+
+        editData(dataForEdit) {
+            firebase.database()
+            .ref(`/${this.userName}/${this.month}/banco${this.theLastIdCard}/${this.namePeople}`)
+            .child(`${dataForEdit}`)
+            .update({
+                categoria: 'teste',
+                valor: 100
+            })
+        }
     },
 
     created() {
@@ -217,6 +255,43 @@ export default {
     text-align: end;
     margin-top: 20px;
     margin-bottom: 40px;
+}
+
+.formulario {
+    display: none;
+}
+
+.formulario::before {
+    content: "";
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0,0,0,.8)
+}
+
+.formulario > div {
+    position: relative;
+    top: -300px;
+    padding: 20px 10px 5px;
+    max-width: 300px;
+    margin: 0px auto;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.fechar {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    font-size: 16px;
+    color: #fff;
+    background-color: red;
+    padding: 2px 5px;
+    cursor: pointer;
+    border-radius: 50%;
+    z-index: 2;
 }
 
 </style>

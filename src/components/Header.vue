@@ -61,6 +61,7 @@ export default {
             document.querySelector('.menu').classList.remove('ativo')
             firebase.auth().signOut()
             .then(() => {
+                this.$store.dispatch('resetDatas')
                 this.$router.replace({
                     name: "Login"
                 });

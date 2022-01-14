@@ -118,7 +118,6 @@ export default {
         writeApiData(datas) {
             Object.keys(datas).forEach((item) => {
                 this.$store.dispatch('addRelationshipCardAndBank', [datas[item]["cartao"], item])
-
                 Object.keys(datas[item]).forEach((names) => {
                     for(var key in datas[item][names]) {
                         const category = datas[item][names][key]["categoria"]

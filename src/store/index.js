@@ -32,7 +32,7 @@ export default new Vuex.Store({
     },
 
     ADD_DATA_CATEGORYS(state, value) {
-      if(!state.categorys.includes(value)) {
+      if(!state.categorys.includes(value) && value !== undefined) {
         state.categorys.push(value)
       } else {
         if(!state.categorys.includes("Novo")) {
@@ -61,6 +61,20 @@ export default new Vuex.Store({
 
     ADD_RELATIONSHIP(state, value) {
       state.bankAndCardRelationship[value[0]] = value[1]
+    },
+
+    RESET_DATAS(state) {
+      state.user = {
+        loggedIn: false,
+        data: null
+      },
+      state.year = '',
+      state.month = '',
+      state.categorys = [],
+      state.cards = [],
+      state.peoples = [],
+      state.datasApi = [],
+      state.bankAndCardRelationship = {}
     },
   },
 
@@ -98,6 +112,10 @@ export default new Vuex.Store({
 
     addRelationshipCardAndBank({ commit }, relationship) {
       commit('ADD_RELATIONSHIP', relationship)
+    },
+
+    resetDatas({ commit }) {
+      commit('RESET_DATAS')
     },
   },
 
