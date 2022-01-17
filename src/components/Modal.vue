@@ -10,7 +10,7 @@
             <label for="valueItem">Senha</label>
             <input type="number" id="valueItem" v-model="valueItem" placeholder="Qual valor?">
 
-           <button class="botao" type="submit">Salvar</button>
+           <slot></slot>
         </form>
     </transition>
 </template>

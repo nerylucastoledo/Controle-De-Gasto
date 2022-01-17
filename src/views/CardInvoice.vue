@@ -36,7 +36,7 @@
                 <p class="fechar" @click="fecharModalFormulario">X</p>
                 <Modal>
                     <div>
-                        <button class="btn btn-login" type="submit" @click.prevent="atualizarDados">Atualizar Item</button>
+                        <button class="botao" type="submit" @click.prevent="atualizarDados">Atualizar Item</button>
                     </div>
                 </Modal>
             </div>
@@ -151,19 +151,13 @@ export default {
         },
 
         openModal(dataForEdit) {
-            document.querySelector('.formulario').style.display = 'block'
+            document.querySelector('.formulario').style.display = 'initial'
             this.editData(dataForEdit)
         },
 
         editData(dataForEdit) {
-            firebase.database()
-            .ref(`/${this.userName}/${this.month}/banco${this.theLastIdCard}/${this.namePeople}`)
-            .child(`${dataForEdit}`)
-            .update({
-                categoria: 'teste',
-                valor: 100
-            })
-        }
+            console.log(dataForEdit)
+        },
     },
 
     created() {
@@ -272,10 +266,10 @@ export default {
 }
 
 .formulario > div {
-    position: relative;
-    top: -300px;
-    padding: 20px 10px 5px;
-    max-width: 300px;
+    position: absolute;
+    top: 20%;
+    padding: 20px;
+    width: 82%;
     margin: 0px auto;
     background-color: #fff;
     border-radius: 10px;
