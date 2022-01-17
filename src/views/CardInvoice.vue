@@ -21,7 +21,8 @@
                         <p>{{listValue[index] | numeroPreco}}</p>
 
                         <span class="apagar">X</span>
-                        <span class="editar" @click="openModal(item)">
+
+                        <span class="editar" @click="openModalForm(item)">
                             <font-awesome-icon icon="edit" size="1x"/>
                         </span>
                     </div>
@@ -72,6 +73,7 @@ export default {
             firstNameForInvoice: "",
             theLastIdCard: '',
             namePeople: '',
+            urlFromDataInDatabase: ''
         }
     },
 
@@ -92,29 +94,28 @@ export default {
     },
 
     methods: {
-        getInvoice() {
+        async getInvoice() {
             this.params = this.$route.params.id
 
-            firebase.database()
-            .ref(`${this.userName}/${this.month}/banco${this.params}`)
-            .once("value", snapshot => {
-                this.items = snapshot.val()
-                this.color.backgroundColor = snapshot.val()["cor"]
+            const resultAPi = await this.getDataFromApi(`${this.userName}/${this.month}/banco${this.params}`)
 
-                Object.keys(snapshot.val()).forEach((item) => {
-                    this.theLastIdCard = snapshot.val()["id"]
-                    if(item != "cartao" && item != "cor" && item != "id") {
-                        if(!this.firstNameForInvoice.length) {
-                            this.firstNameForInvoice = item
-                            this.loadingInvoice()
-                        }
-                        this.names.push(item)
+            this.items = resultAPi.val()
+            this.color.backgroundColor = resultAPi.val()["cor"]
 
-                        for(var key in snapshot.val()[item]) {
-                            this.valueTotalInvoice += parseFloat(snapshot.val()[item][key]["valor"])
-                        }
+            Object.keys(resultAPi.val()).forEach((key) => {
+                this.theLastIdCard = resultAPi.val()["id"]
+
+                if(key != "cartao" && key != "cor" && key != "id") {
+                    if(!this.firstNameForInvoice.length) {
+                        this.firstNameForInvoice = key
+                        this.loadingInvoice()
                     }
-                })
+                    this.names.push(key)
+
+                    for(var data in resultAPi.val()[key]) {
+                        this.valueTotalInvoice += parseFloat(resultAPi.val()[key][data]["valor"])
+                    }
+                }
             })
         },
 
@@ -126,38 +127,53 @@ export default {
             })
         },
 
-        loadingInvoice() {
+        async loadingInvoice() {
             this.listValue = []
             this.listItem = []
             this.valuePeopleTotal = 0
 
             this.namePeople = this.$route.query.name || this.firstNameForInvoice
 
-            firebase.database()
-            .ref(`${this.userName}/${this.month}/banco${this.params}/${this.namePeople}`)
-            .once("value", snapshot => {
-                for (var data in snapshot.val()) {
-                    if(data != "cartao" && data != "cor" && data != "id") {
-                        this.listItem.push(data)
-                        this.listValue.push(snapshot.val()[data]["valor"])
-                    }
+            const resultApi = await this.getDataFromApi(`${this.userName}/${this.month}/banco${this.params}/${this.namePeople}`)
+
+            for (var data in resultApi.val()) {
+                if(data != "cartao" && data != "cor" && data != "id") {
+                    this.listItem.push(data)
+
+                    this.listValue.push(resultApi.val()[data]["valor"])
                 }
-                this.listValue.forEach((item) => this.valuePeopleTotal += parseFloat(item))
-            })
+            }
+            
+            this.listValue.forEach((item) => this.valuePeopleTotal += parseFloat(item))
         },
 
         fecharModalFormulario() {
             document.querySelector('.formulario').style.display = 'none'
         },
 
-        openModal(dataForEdit) {
+        openModalForm(dataForEdit) {
             document.querySelector('.formulario').style.display = 'initial'
-            this.editData(dataForEdit)
+            window.scrollTo({ top: 0, behavior: "smooth" })
+            this.getDataClicked(dataForEdit)
         },
 
-        editData(dataForEdit) {
-            console.log(dataForEdit)
+        async getDataClicked(dataForEdit) {
+            this.urlFromDataInDatabase = `${this.userName}/${this.month}/banco${this.$route.params.id}/${this.namePeople}/${dataForEdit}`
+
+            var result = await this.getDataFromApi(this.urlFromDataInDatabase)
+
+            this.$root.$emit('fillInFormData', [dataForEdit, result.val()["categoria"], result.val()["valor"]])
         },
+
+        atualizarDados() {
+            this.$root.$emit('updateData', this.urlFromDataInDatabase)
+        },
+
+        async getDataFromApi(params) {
+            const resultApi = await firebase.database().ref(params).once("value", snapshot => snapshot.val())
+
+            return resultApi
+        }
     },
 
     created() {

@@ -72,14 +72,11 @@ export default {
             yearSelected: "",
             dataInvoice: null,
             loading: 1,
+            userName: ''
         }
     },
 
     computed: {
-        userName() {
-            return this.$store.state.user.data.displayName.replace(' ', '')
-        },
-
         month() {
             return this.$store.state.month + this.$store.state.year
         },
@@ -135,6 +132,7 @@ export default {
 
     mounted() {
         setTimeout(() => {
+            this.userName = localStorage.getItem('displayName').replace(' ', '')
             const date = new Date()
             this.yearSelected = date.getFullYear().toString()
             this.monthSelected = this.months[`${date.getMonth() + 1}`]

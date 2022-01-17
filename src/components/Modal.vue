@@ -4,10 +4,10 @@
             <label for="item">Item</label>
             <input type="text" id="item" v-model="item" placeholder="O que é?">
 
-            <label for="category">Senha</label>
+            <label for="category">Categoria</label>
             <input type="text" id="category" v-model="category" placeholder="Categoria?">
 
-            <label for="valueItem">Senha</label>
+            <label for="valueItem">Valor</label>
             <input type="number" id="valueItem" v-model="valueItem" placeholder="Qual valor?">
 
            <slot></slot>
@@ -16,13 +16,38 @@
 </template>
 
 <script>
+
+import * as firebase from 'firebase';
+
 export default {
     data() {
         return {
             item: '',
             category: '',
-            valueItem: ''
+            valueItem: '20'
         }
+    },
+
+    mounted() {
+        this.$root.$on('fillInFormData', (from) => {
+            this.item = from[0],
+            this.category = from[1],
+            this.valueItem = from[2]
+        });
+
+        this.$root.$on('updateData', (urlParams) => {
+            firebase.database()
+            .ref(urlParams)
+            .update({
+                categoria: this.category,
+                valor: parseInt(this.valueItem)
+            })
+            .then(() => {
+                setTimeout(() => {
+                    this.$router.replace({ name: "Dashboard" });
+                }, 1000);
+            })
+        });
     }
 }
 </script>
