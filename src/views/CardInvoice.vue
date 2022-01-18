@@ -20,7 +20,9 @@
 
                         <p>{{listValue[index] | numeroPreco}}</p>
 
-                        <span class="apagar">X</span>
+                        <span class="apagar" @click="deleteData(item)">
+                            X
+                        </span>
 
                         <span class="editar" @click="openModalForm(item)">
                             <font-awesome-icon icon="edit" size="1x"/>
@@ -167,6 +169,20 @@ export default {
 
         atualizarDados() {
             this.$root.$emit('updateData', this.urlFromDataInDatabase)
+        },
+
+        deleteData(item) {
+            firebase.database()
+            .ref(`${this.userName}/${this.month}/banco${this.$route.params.id}/${this.namePeople}`)
+            .child(item)
+            .remove(() => {
+                setTimeout(() => {
+                    this.names = []
+                    this.valueTotalInvoice = 0
+                    this.getInvoice()
+                    this.loadingInvoice()
+                }, 1000);
+            })
         },
 
         async getDataFromApi(params) {
