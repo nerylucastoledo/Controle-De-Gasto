@@ -1,6 +1,6 @@
 <template>
     <section class="container cards">
-        <div v-if="cards">
+        <div v-if="cards.length">
             <div v-for="(card, key) in cards" :key="card+key">
                 <router-link v-if="card['id']" :to="{ name: 'CardInvoice', params: { id: card['id']}}">
                     <div class="box-invoice" :style="{backgroundColor: card['cor']}">
@@ -10,6 +10,10 @@
                     </div>
                 </router-link>
             </div>
+
+            <div>
+                <Chart :categorys='newCategorys' :valueCategorys="valuesCategorys"></Chart>
+            </div>
         </div>
         
         <div v-else>
@@ -18,10 +22,6 @@
             <p class="register-card">Cadastre um cartão</p>
 
             <button class="botao">Clique aqui (icon)</button>
-        </div>
-
-        <div>
-            <Chart :categorys='newCategorys' :valueCategorys="valuesCategorys"></Chart>
         </div>
     </section>
 </template>
@@ -54,6 +54,12 @@ export default {
         },
     },
 
+    watch: {
+        cards() {
+            this.getDataOfUserForChart()
+        },
+    },
+
     methods: {
         calculateTotal(params) {
             var total = 0
@@ -83,6 +89,9 @@ export default {
                     }
                 })
             })
+
+            this.newCategorys = []
+            this.valuesCategorys = []
 
             this.categorys.forEach((item) => {
                 if(objetAux[item] !== undefined) {

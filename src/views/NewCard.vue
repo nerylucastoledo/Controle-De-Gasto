@@ -83,7 +83,9 @@ export default {
         }
     },
 
-    beforeCreate() {
+    created() {
+        document.title = 'New Card'
+
         const loginUser = localStorage.getItem('login')
         if(!loginUser) {
             this.$router.replace({ name: "Login" });

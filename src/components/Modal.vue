@@ -2,7 +2,7 @@
     <transition mode="out-in">
         <form action="#" @submit.prevent="login" class="modal-form">
             <label for="item">Item</label>
-            <input type="text" id="item" v-model="item" placeholder="O que é?">
+            <input type="text" id="item" v-model="item" placeholder="O que é?" readonly>
 
             <label for="category">Categoria</label>
             <input type="text" id="category" v-model="category" placeholder="Categoria?">
@@ -28,14 +28,14 @@ export default {
         }
     },
 
-    mounted() {
+    async mounted() {
         this.$root.$on('fillInFormData', (from) => {
             this.item = from[0],
             this.category = from[1],
             this.valueItem = from[2]
         });
 
-        this.$root.$on('updateData', (urlParams) => {
+        await this.$root.$on('updateData', (urlParams)=> {
             firebase.database()
             .ref(urlParams)
             .update({
@@ -45,9 +45,15 @@ export default {
             .then(() => {
                 setTimeout(() => {
                     this.$router.replace({ name: "Dashboard" });
-                }, 1000);
+                }, 500);
             })
         });
     }
 }
 </script>
+
+<style>
+#item {
+    background-color: rgb(218, 212, 212);
+}
+</style>

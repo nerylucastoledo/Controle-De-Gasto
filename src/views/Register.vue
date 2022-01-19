@@ -36,7 +36,6 @@ export default {
 
     methods: {
         register() {
-            console.log(this.name)
             firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
             .then(data => {
                 firebase.auth().currentUser.updateProfile({displayName: this.name})
@@ -51,6 +50,10 @@ export default {
                 this.error = err.message;
             });
         }
+    },
+
+    created() {
+        document.title = 'Register'
     }
 }
 

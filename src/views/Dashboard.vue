@@ -80,6 +80,10 @@ export default {
         month() {
             return this.$store.state.month + this.$store.state.year
         },
+        
+        peoples() {
+            return this.$store.state.peoples
+        }
     },
 
     watch: {
@@ -88,6 +92,10 @@ export default {
         },
 
         monthSelected() {
+            this.getData()
+        },
+
+        peopleSelected() {
             this.getData()
         }
     },
@@ -100,14 +108,20 @@ export default {
             await firebase.database()
             .ref(`${this.userName}/${this.month}`)
             .once("value", snapshot => {
-                if(snapshot.val() === null) {
-                    this.dataInvoice = null
-                    this.loading = 0
+                if(snapshot.exists()) {
+                    if(snapshot.val() === null) {
+                        this.dataInvoice = []
+                        this.loading = 0
 
+                    } else {
+                        this.dataInvoice = Object.keys(snapshot.val()).map((key) => snapshot.val()[key])
+
+                        this.writeApiData(snapshot.val())
+                    }
                 } else {
-                    this.dataInvoice = Object.keys(snapshot.val()).map((key) => snapshot.val()[key])
-
-                    this.writeApiData(snapshot.val())
+                    this.dataInvoice = []
+                    this.loading = 0
+                    
                 }
             })
         },
@@ -131,6 +145,8 @@ export default {
     },
     
     created() {
+        document.title = 'Dashboard'
+
         const loginUser = localStorage.getItem('login')
         if(!loginUser) {
             this.$router.replace({ name: "Login" });
@@ -163,6 +179,11 @@ export default {
     border: 1px solid #B9DD2A;
     font-family: 'Montserrat';
     font-size: 16px;
+}
+
+#peopleSelected {
+    width: 100%;
+    margin-top: 20px;
 }
 
 .not-fund-card p{

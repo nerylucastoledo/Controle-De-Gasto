@@ -1,5 +1,5 @@
 <template>
-    <section class="container">
+    <section>
         <div id="chart">
             <apexchart type="pie" :options="chartOptions" :series="series"></apexchart>
         </div>
@@ -20,10 +20,13 @@ export default {
                     type: 'pie',
                 },
                 labels: this.categorys,
+                legend: {
+                    position: "bottom",
+                },
                 responsive: [{
                     options: {
                         chart: {
-                            width: 400
+                            width: 600
                         },
                         legend: {
                             position: 'center'
@@ -40,6 +43,8 @@ export default {
 <style>
 
 #chart {
-    width: 100%;
+    width: 105%;
+    padding-bottom: 40px;
 }
+
 </style>

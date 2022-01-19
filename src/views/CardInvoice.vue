@@ -193,6 +193,8 @@ export default {
     },
 
     created() {
+        document.title = 'Card Invoice'
+
         this.getInvoice()
         this.loadingInvoice()
     }

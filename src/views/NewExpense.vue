@@ -108,8 +108,11 @@ export default {
     methods: {
         newExpense() {
             const card = this.bankAndCardRelationship[this.cardSelected]
-            const newExpenseForPeople = this.peopleSelected === 'Novo' ? this.namePeople : this.peopleSelected
-            const newExpenseForCategory = this.categorySelected === 'Novo' ? this.nameCategory : this.categorySelected
+            var newExpenseForPeople = this.peopleSelected === 'Novo' ? this.namePeople : this.peopleSelected
+            var newExpenseForCategory = this.categorySelected === 'Novo' ? this.nameCategory : this.categorySelected
+
+            newExpenseForPeople = newExpenseForPeople[0].toUpperCase() + newExpenseForPeople.substr(1)
+            newExpenseForCategory = newExpenseForCategory[0].toUpperCase() + newExpenseForCategory.substr(1)
 
             firebase.database()
             .ref(`/${this.userName}/${this.month}/${card}`)
@@ -161,6 +164,8 @@ export default {
     },
 
     beforeCreate() {
+        document.title = 'New Expense'
+
         const loginUser = localStorage.getItem('login')
         if(!loginUser) {
             this.$router.replace({ name: "Login" });

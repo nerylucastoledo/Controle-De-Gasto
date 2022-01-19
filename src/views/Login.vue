@@ -47,6 +47,10 @@ export default {
                 this.error = 'E-mail ou senha incorreto!';
             });
         }
+    },
+
+    created() {
+        document.title = 'Login'
     }
 }
 

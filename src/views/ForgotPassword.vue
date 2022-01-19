@@ -47,6 +47,10 @@ export default {
                 this.error = "Email não encontrado.";
             });
         }
+    },
+
+    created() {
+        document.title = 'Forgot Password'
     }
 }
 
