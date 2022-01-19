@@ -66,21 +66,30 @@ export default {
                     this.$router.replace({ name: "Dashboard" });
                 }, 1000);
             })
+        },
+
+        async getDatas() {
+            var aux = []
+            await firebase.database()
+            .ref(`${this.userName}/${this.month}`)
+            .once("value", snapshot => {
+                if(snapshot.exists()) {
+                    Object.keys(snapshot.val()).forEach((item) => {
+                        aux.push(item)
+                    })
+                }
+            })
+            this.lastIdCard = parseInt(aux.length) ? parseInt(aux.length) + 1 : 0
         }
     },
 
-    async created() {
-        var aux = []
-        await firebase.database()
-        .ref(`${this.userName}/${this.month}`)
-        .once("value", snapshot => {
-            if(snapshot.exists()) {
-                Object.keys(snapshot.val()).forEach((item) => {
-                    aux.push(item)
-                })
-            }
-        })
-        this.lastIdCard = parseInt(aux.length) ? parseInt(aux.length) + 1 : 0
+    beforeCreate() {
+        const loginUser = localStorage.getItem('login')
+        if(!loginUser) {
+            this.$router.replace({ name: "Login" });
+        } else {
+            this.getDatas()
+        }
     }
 }
 </script>

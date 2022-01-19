@@ -6,6 +6,7 @@ import * as firebase from 'firebase';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import VueApexCharts from 'vue-apexcharts'
 
 Vue.config.productionTip = false
 
@@ -20,6 +21,8 @@ library.add([
 ])
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('apexchart', VueApexCharts)
+Vue.use(VueApexCharts)
 
 Vue.filter("numeroPreco", valor => {
   valor = Number(valor)

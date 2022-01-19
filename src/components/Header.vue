@@ -62,6 +62,7 @@ export default {
             firebase.auth().signOut()
             .then(() => {
                 this.$store.dispatch('resetDatas')
+                localStorage.clear()
                 this.$router.replace({
                     name: "Login"
                 });

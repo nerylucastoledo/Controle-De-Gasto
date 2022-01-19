@@ -159,6 +159,13 @@ export default {
             }, 700)
         }
     },
+
+    beforeCreate() {
+        const loginUser = localStorage.getItem('login')
+        if(!loginUser) {
+            this.$router.replace({ name: "Login" });
+        }
+    }
 }
 </script>
 

@@ -129,15 +129,21 @@ export default {
             this.loading = 0
         }
     },
+    
+    created() {
+        const loginUser = localStorage.getItem('login')
+        if(!loginUser) {
+            this.$router.replace({ name: "Login" });
 
-    mounted() {
-        setTimeout(() => {
+        } else {
+            setTimeout(() => {
             this.userName = localStorage.getItem('displayName').replace(' ', '')
             const date = new Date()
             this.yearSelected = date.getFullYear().toString()
             this.monthSelected = this.months[`${date.getMonth() + 1}`]
         }, 700)
-    },
+        }
+    }
 }
 
 </script>

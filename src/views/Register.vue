@@ -4,13 +4,13 @@
 
         <form action="#" @submit.prevent="register">
             <label for="name">Nome e sobrenome</label>
-            <input type="text" id="name" v-model="name" placeholder="Digite seu nome">
+            <input type="text" id="name" v-model="name" placeholder="Digite seu nome" required>
 
             <label for="email">Seu e-mail</label>
-            <input type="email" id="email" v-model="email" placeholder="Digite seu e-mail">
+            <input type="email" id="email" v-model="email" placeholder="Digite seu e-mail" required>
 
             <label for="password">Sua senha</label>
-            <input type="password" id="password" v-model="password" placeholder="Sua senha">
+            <input type="password" id="password" autocomplete="on" v-model="password" placeholder="Sua senha" required>
 
            <button class="botao" type="submit">Criar</button>
 

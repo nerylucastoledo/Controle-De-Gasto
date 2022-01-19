@@ -6,10 +6,10 @@
 
         <form action="#" @submit.prevent="login">
             <label for="email">E-mail</label>
-            <input type="email" id="email" v-model="email" placeholder="Digite seu e-mail">
+            <input type="email" id="email" v-model="email" placeholder="Digite seu e-mail" required>
 
             <label for="password">Senha</label>
-            <input type="password" id="password" v-model="password" placeholder="Sua senha">
+            <input type="password" id="password" autocomplete="on" v-model="password" placeholder="Sua senha" required>
 
             <router-link to="/forgot-password" class="esqueceu-senha">Esqueceu a senha?</router-link>
 
@@ -89,6 +89,7 @@ input {
     text-align: center;
     font-weight: bold;
     font-size: 18px;
+    padding-bottom: 20px;
 }
 
 .not-found {

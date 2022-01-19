@@ -19,13 +19,40 @@
 
             <button class="botao">Clique aqui (icon)</button>
         </div>
+
+        <div>
+            <Chart :categorys='newCategorys' :valueCategorys="valuesCategorys"></Chart>
+        </div>
     </section>
 </template>
 
 <script>
 
+import Chart from '../components/Chart.vue'
+
 export default {
     props: ["cards"],
+
+    data() {
+        return {
+            newCategorys: [],
+            valuesCategorys: []
+        }
+    },
+
+    components: {
+        Chart
+    },
+
+    computed: {
+        userName() {
+            return this.$store.state.user.data.displayName.split(' ')
+        },
+
+        categorys() {
+            return this.$store.state.categorys
+        },
+    },
 
     methods: {
         calculateTotal(params) {
@@ -38,7 +65,36 @@ export default {
                 }
             })
             return total
+        },
+
+        getDataOfUserForChart() {
+            var objetAux = {}
+
+            this.cards.forEach((item) => {
+                Object.keys(item[this.userName[0]]).forEach((key) => {
+                    var nameCategory = item[this.userName[0]][key]["categoria"]
+                    var valueCategory = item[this.userName[0]][key]["valor"]
+
+                    if(objetAux[nameCategory]) {
+                        objetAux[nameCategory] += valueCategory
+
+                    } else {
+                        objetAux[nameCategory] = valueCategory
+                    }
+                })
+            })
+
+            this.categorys.forEach((item) => {
+                if(objetAux[item] !== undefined) {
+                    this.newCategorys.push(item)
+                    this.valuesCategorys.push(objetAux[item])
+                }
+            })
         }
+    },
+
+    created() {
+        this.getDataOfUserForChart()
     }
 }
 
