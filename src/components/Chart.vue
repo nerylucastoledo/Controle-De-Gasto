@@ -43,7 +43,7 @@ export default {
 <style>
 
 #chart {
-    width: 105%;
+    width: 100%;
     padding-bottom: 40px;
 }
 
