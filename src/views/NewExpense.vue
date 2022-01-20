@@ -48,6 +48,7 @@
         <div v-if="notification">
             <Notification/>
         </div>
+        {{bankAndCardRelationship}}
     </section>
 </template>
 
@@ -115,11 +116,11 @@ export default {
             newExpenseForCategory = newExpenseForCategory[0].toUpperCase() + newExpenseForCategory.substr(1)
 
             firebase.database()
-            .ref(`/${this.userName}/${this.month}/${card}`)
+            .ref(`/${this.userName}/${this.month}/${card.banco}`)
             .once("value", snapshot => {
                 if (snapshot.exists()){
                     firebase.database()
-                    .ref(`/${this.userName}/${this.month}/${card}`)
+                    .ref(`/${this.userName}/${this.month}/${card.banco}`)
                     .child(`${newExpenseForPeople}`)
                     .update({
                         [this.item]: {
@@ -137,13 +138,14 @@ export default {
         },
 
         newMonthForExpense(card) {
+            console.log(card)
             firebase.database()
             .ref(`/${this.userName}/${this.month}`)
-            .child(`${card}`)
+            .child(`${card.banco}`)
             .update({
                 cartao: this.cardSelected,
-                cor: this.datasApi[card].cor,
-                id: this.datasApi[card].id,
+                cor: card.cor,
+                id: card.id,
                 [this.peopleSelected]: {
                     [this.item]: {
                         categoria: this.categorySelected,

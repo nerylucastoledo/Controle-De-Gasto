@@ -12,6 +12,13 @@ export default {
 
     props: ["categorys", "valueCategorys"],
 
+    watch: {
+        categorys() {
+            this.series = this.valueCategorys
+            this.chartOptions = {labels: this.categorys}
+        }
+    },
+
     data() {
         return {
             series: this.valueCategorys,

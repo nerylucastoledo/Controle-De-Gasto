@@ -77,17 +77,19 @@ export default {
             var objetAux = {}
 
             this.cards.forEach((item) => {
-                Object.keys(item[this.userName[0]]).forEach((key) => {
-                    var nameCategory = item[this.userName[0]][key]["categoria"]
-                    var valueCategory = item[this.userName[0]][key]["valor"]
+                if(item[this.userName[0]] !== undefined) {
+                    Object.keys(item[this.userName[0]]).forEach((key) => {
+                        var nameCategory = item[this.userName[0]][key]["categoria"]
+                        var valueCategory = item[this.userName[0]][key]["valor"]
 
-                    if(objetAux[nameCategory]) {
-                        objetAux[nameCategory] += valueCategory
+                        if(objetAux[nameCategory]) {
+                            objetAux[nameCategory] += valueCategory
 
-                    } else {
-                        objetAux[nameCategory] = valueCategory
-                    }
-                })
+                        } else {
+                            objetAux[nameCategory] = valueCategory
+                        }
+                    })
+                }
             })
 
             this.newCategorys = []

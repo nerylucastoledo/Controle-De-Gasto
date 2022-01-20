@@ -60,7 +60,7 @@ export default new Vuex.Store({
     },
 
     ADD_RELATIONSHIP(state, value) {
-      state.bankAndCardRelationship[value[0]] = value[1]
+      state.bankAndCardRelationship[value[0]] = {cor: value[1], id: value[2], banco: value[3]}
     },
 
     RESET_DATAS(state) {
