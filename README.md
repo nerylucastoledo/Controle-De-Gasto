@@ -14,10 +14,13 @@
 - Dashboard contendo o valor da fatura do cartão
 - Dashboard com um gráfico mostrando aonde você mais gastou no mês
 
-## Projeto integrado com o firebase. (RealTimeDatabase)
+## Projeto integrado com o firebase (Real Time Database)
 
 ## Projeto integrado com firebase (Authentication)
 O sistema de login, criação de conta e reset de senha é feita com o firebase
+
+## Imagem do projeto:
+<img width="149" alt="printControleDeGasto" src="https://user-images.githubusercontent.com/20606664/151351613-09fa98ab-d0be-40a6-bc82-23d49cbf84f1.png">
 
 ## Como rodar a aplicação na sua máquina :rocket:
 No terminal clone o projeto:
