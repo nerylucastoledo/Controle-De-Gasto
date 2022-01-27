@@ -10,12 +10,7 @@
 
 - Sistema de login (Nova conta, login e reset de senha)
 - Cadastrar um novo cartão
-- Cadastrar um novo gasto para o cartão
-  Cadastro por categoria
-  Valor
-  Pessoa
-  Nome do item
-
+- Cadastrar um novo gasto para o cartão (categoria, valor, pessoa, item)
 - Dashboard contendo o valor da fatura do cartão
 - Dashboard com um gráfico mostrando aonde você mais gastou no mês
 
