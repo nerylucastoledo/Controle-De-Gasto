@@ -48,7 +48,6 @@
         <div v-if="notification">
             <Notification/>
         </div>
-        {{bankAndCardRelationship}}
     </section>
 </template>
 
@@ -138,7 +137,6 @@ export default {
         },
 
         newMonthForExpense(card) {
-            console.log(card)
             firebase.database()
             .ref(`/${this.userName}/${this.month}`)
             .child(`${card.banco}`)

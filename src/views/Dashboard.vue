@@ -72,7 +72,7 @@ export default {
             yearSelected: "",
             dataInvoice: null,
             loading: 1,
-            userName: ''
+            userName: '',
         }
     },
 

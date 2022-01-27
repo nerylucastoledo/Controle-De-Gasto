@@ -5,7 +5,7 @@ import store from './store'
 import * as firebase from 'firebase';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import VueApexCharts from 'vue-apexcharts'
 
 Vue.config.productionTip = false
@@ -17,7 +17,8 @@ new Vue({
 }).$mount('#app')
 
 library.add([
-  faEdit
+  faEdit,
+  faPlusSquare
 ])
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

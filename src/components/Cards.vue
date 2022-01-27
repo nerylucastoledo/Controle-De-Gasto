@@ -21,7 +21,12 @@
 
             <p class="register-card">Cadastre um cartão</p>
 
-            <button class="botao">Clique aqui (icon)</button>
+             <router-link to="/new-card">
+                <button class="botao botao-icon">
+                    <span>Clique aqui</span>
+                    <font-awesome-icon icon="plus-square" size="1x"/>
+                </button>
+             </router-link>
         </div>
     </section>
 </template>
@@ -147,6 +152,16 @@ export default {
 
 .value-invoice {
     font-size: 18px;
+}
+
+.botao-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.botao-icon span {
+    margin-right: 10px;
 }
 
 </style>

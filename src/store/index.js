@@ -63,7 +63,7 @@ export default new Vuex.Store({
       state.bankAndCardRelationship[value[0]] = {cor: value[1], id: value[2], banco: value[3]}
     },
 
-    RESET_DATAS(state) {
+    LOGOUT(state) {
       state.user = {
         loggedIn: false,
         data: null
@@ -114,8 +114,8 @@ export default new Vuex.Store({
       commit('ADD_RELATIONSHIP', relationship)
     },
 
-    resetDatas({ commit }) {
-      commit('RESET_DATAS')
+    logout({ commit }) {
+      commit('LOGOUT')
     },
   },
 
