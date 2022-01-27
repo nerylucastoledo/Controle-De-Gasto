@@ -8,13 +8,8 @@
 
 ### O que o site é capaz de fazer 💥
 
-- Sistema de login
-- -Login
-- -Reset de senha
-- -Nova conta
-
+- Sistema de login (Nova conta, login e reset de senha)
 - Cadastrar um novo cartão
-
 - Cadastrar um novo gasto para o cartão
 - -Cadastro por categoria
 - -Valor
@@ -26,7 +21,7 @@
 
 ## Projeto integrado com o firebase. (RealTimeDatabase)
 
-## Projeto integrado com firebase
+## Projeto integrado com firebase (Authentication)
 O sistema de login, criação de conta e reset de senha é feita com o firebase
 
 ## Como rodar a aplicação na sua máquina :rocket:
