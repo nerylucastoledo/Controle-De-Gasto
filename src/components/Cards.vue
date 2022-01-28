@@ -14,6 +14,12 @@
             <div>
                 <Chart :categorys='newCategorys' :valueCategorys="valuesCategorys"></Chart>
             </div>
+
+            <div>
+                <p class="value-total-invoice">{{userName[0]}}, sua parte:
+                    <span>{{valueInvoiceUser | numeroPreco}}</span>
+                </p>
+            </div>
         </div>
         
         <div v-else>
@@ -41,7 +47,8 @@ export default {
     data() {
         return {
             newCategorys: [],
-            valuesCategorys: []
+            valuesCategorys: [],
+            valueInvoiceUser: 0
         }
     },
 
@@ -82,12 +89,14 @@ export default {
 
         getDataOfUserForChart() {
             var objetAux = {}
+            this.valueInvoiceUser = 0
 
             this.cards.forEach((item) => {
                 if(item[this.userName[0]] !== undefined) {
                     Object.keys(item[this.userName[0]]).forEach((key) => {
                         var nameCategory = item[this.userName[0]][key]["categoria"]
                         var valueCategory = item[this.userName[0]][key]["valor"]
+                        this.valueInvoiceUser += item[this.userName[0]][key]["valor"]
 
                         if(objetAux[nameCategory]) {
                             objetAux[nameCategory] += valueCategory
@@ -153,7 +162,7 @@ export default {
 }
 
 .value-invoice {
-    font-size: 18px;
+    font-size: 24px;
 }
 
 .botao-icon {
@@ -164,6 +173,21 @@ export default {
 
 .botao-icon span {
     margin-right: 10px;
+}
+
+.value-total-invoice {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    border-top: 1px solid #B9DD2A;
+    border-bottom: 1px solid #B9DD2A;
+    padding: 10px 0;
+    margin-bottom: 40px;
+    color: #222;
+}
+
+.value-total-invoice span {
+    color: #B9DD2A;
 }
 
 </style>
