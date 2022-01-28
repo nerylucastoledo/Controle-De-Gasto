@@ -68,6 +68,7 @@ export default {
     methods: {
         calculateTotal(params) {
             var total = 0
+            
             Object.keys(params).forEach((item) => {
                 if(item != "cartao" && item != "cor" && item != "id") {
                     for(var key in params[item]) {
@@ -75,6 +76,7 @@ export default {
                     }
                 }
             })
+            
             return total
         },
 

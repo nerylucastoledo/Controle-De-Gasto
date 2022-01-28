@@ -76,6 +76,11 @@ export default new Vuex.Store({
       state.datasApi = [],
       state.bankAndCardRelationship = {}
     },
+
+    CHANGE_MONTH_YEAR(state, list_date) {
+      state.month = list_date[0]
+      state.year = list_date[1]
+    }
   },
 
   actions: {
@@ -117,6 +122,10 @@ export default new Vuex.Store({
     logout({ commit }) {
       commit('LOGOUT')
     },
+
+    changeTheMonth({ commit }, list_date) {
+      commit('CHANGE_MONTH_YEAR', list_date)
+    }
   },
 
   modules: {

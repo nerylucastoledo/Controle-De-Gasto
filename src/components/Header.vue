@@ -75,8 +75,8 @@ export default {
 
 <style>
 #logo {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 50px;
 }
 
 .header {

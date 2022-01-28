@@ -98,8 +98,10 @@ export default {
 
     methods: {
         async getData() {
-            this.$store.state.month = this.monthSelected.toLowerCase()
-            this.$store.state.year = this.yearSelected.toString()
+            this.$store.dispatch('changeTheMonth', [
+                this.monthSelected.toLowerCase(), 
+                this.yearSelected.toString()
+            ])
 
             await firebase.database()
             .ref(`${this.userName}/${this.month}`)
@@ -114,22 +116,28 @@ export default {
 
                         this.writeApiData(snapshot.val())
                     }
+
                 } else {
                     this.dataInvoice = []
                     this.loading = 0
-                    
                 }
             })
         },
 
         writeApiData(datas) {
             Object.keys(datas).forEach((item) => {
-                this.$store.dispatch('addRelationshipCardAndBank', [datas[item]["cartao"], datas[item]["cor"], datas[item]["id"], item])
+                this.$store.dispatch('addRelationshipCardAndBank', [
+                    datas[item]["cartao"], 
+                    datas[item]["cor"], 
+                    datas[item]["id"], 
+                    item
+                ])
+
                 Object.keys(datas[item]).forEach((names) => {
                     for(var key in datas[item][names]) {
                         const category = datas[item][names][key]["categoria"]
+                        
                         this.$store.dispatch('addDatasCategorys', category)
-
                         this.$store.dispatch('addNamesPeoples', names)
                     }
                 })
@@ -148,12 +156,11 @@ export default {
             this.$router.replace({ name: "Login" });
 
         } else {
-            setTimeout(() => {
             this.userName = localStorage.getItem('displayName').replace(' ', '')
+
             const date = new Date()
             this.yearSelected = date.getFullYear().toString()
             this.monthSelected = this.months[`${date.getMonth() + 1}`]
-        }, 700)
         }
     }
 }

@@ -5,6 +5,7 @@
             <label for="card">Cartão</label>
             <select v-model="cardSelected" id="card" class="filter-selected">
                 <option disabled value="">Selecione o cartão</option>
+
                 <option v-for="card in cards" :key="card">
                     {{card}}
                 </option>
@@ -13,6 +14,7 @@
             <label for="people">Pessoa</label>
             <select v-model="peopleSelected" id="people" class="filter-selected">
                 <option disabled value="">Selecione a pessoa</option>
+
                 <option v-for="people in peoples" :key="people">
                     {{people}}
                 </option>
@@ -29,6 +31,7 @@
             <label for="category">Categoria</label>
             <select v-model="categorySelected" id="category" class="filter-selected">
                 <option disabled value="">Selecione a categoria</option>
+
                 <option v-for="category in categorys" :key="category">
                     {{category}}
                 </option>
@@ -54,7 +57,7 @@
 <script>
 
 import * as firebase from 'firebase';
-import Notification from '../components/Notifcation.vue'
+import Notification from '../components/Notifcation.vue';
 
 export default {
 
@@ -108,6 +111,7 @@ export default {
     methods: {
         newExpense() {
             const card = this.bankAndCardRelationship[this.cardSelected]
+            
             var newExpenseForPeople = this.peopleSelected === 'Novo' ? this.namePeople : this.peopleSelected
             var newExpenseForCategory = this.categorySelected === 'Novo' ? this.nameCategory : this.categorySelected
 
