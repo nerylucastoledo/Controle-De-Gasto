@@ -29,7 +29,7 @@ No terminal clone o projeto:
   git clone https://github.com/nerylucastoledo/Controle-De-Gasto.git
 ```
 
-Com o projeto na sua maquina, rode
+Com o projeto na sua maquina, rode o seguinte
 
 ```sh
   npm install
