@@ -236,7 +236,7 @@ export default {
 }
 
 .invoice-values div {
-    background-color: #AB9EAB;
+    background-color: #aca0ac;
     border-radius: 10px;
     padding: 25px 5px 15px 5px;
     display: flex;

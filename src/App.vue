@@ -44,7 +44,7 @@ body, a, ul, li, h1, h2, h3, p, img {
 }
 
 .container {
-  max-width: 100%;
+  max-width: 600px;
   margin: 0 auto;
   padding: 0px 15px;
 }
