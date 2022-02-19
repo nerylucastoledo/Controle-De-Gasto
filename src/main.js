@@ -7,6 +7,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import VueApexCharts from 'vue-apexcharts'
+import './registerServiceWorker'
 
 Vue.config.productionTip = false
 
