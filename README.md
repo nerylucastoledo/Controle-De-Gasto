@@ -8,6 +8,7 @@
 
 ### O que o site é capaz de fazer 💥
 
+- Integrado com PWA, pode ser instalado
 - Sistema de login (Nova conta, login e reset de senha)
 - Cadastrar um novo cartão
 - Cadastrar um novo gasto para o cartão (categoria, valor, pessoa, item)
