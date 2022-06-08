@@ -4,7 +4,7 @@
 
         <p v-if="error" class="not-found">{{error}}</p>
 
-        <form action="#" @submit.prevent="login">
+        <form @submit.prevent="login">
             <label for="email">E-mail</label>
             <input type="email" id="email" v-model="email" placeholder="Digite seu e-mail" required>
 
@@ -13,9 +13,9 @@
 
             <router-link to="/forgot-password" class="esqueceu-senha">Esqueceu a senha?</router-link>
 
-           <button class="botao" type="submit">Entrar</button>
+            <button class="botao" type="submit">Entrar</button>
 
-           <router-link to="/register" class="criar-conta">CRIAR CONTA</router-link>
+            <router-link to="/register" class="criar-conta">CRIAR CONTA</router-link>
         </form>
     </section>
 </template>
@@ -38,14 +38,14 @@ export default {
 
     methods: {
         login() {
-            firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+            firebase.auth()
+            .signInWithEmailAndPassword(this.email, this.password)
             .then(() => {
+                localStorage.setItem('login', true)
                 this.$store.state.user.loggedIn = true
-                this.$router.replace({ name: "Dashboard" });
+                this.$router.replace({ name: "Dashboard" })
             })
-            .catch(() => {
-                this.error = 'E-mail ou senha incorreto!';
-            });
+            .catch(() => this.error = 'E-mail ou senha incorreto!')
         }
     },
 

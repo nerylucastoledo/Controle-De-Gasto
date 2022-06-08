@@ -130,14 +130,13 @@ export default {
                             categoria: newExpenseForCategory,
                             valor: parseFloat(this.valueItem)
                         }
-                    }).then(() => {
-                        this.showNotificationSuccess()
                     })
+                    .then(() => this.showNotificationSuccess())
 
                 } else {
                     this.newMonthForExpense(card)
                 }
-            });
+            })
         },
 
         newMonthForExpense(card) {
@@ -154,26 +153,18 @@ export default {
                         valor: parseFloat(this.valueItem)
                     }
                 }
-            }).then(() => {
-                this.showNotificationSuccess()
             })
+            .then(() => this.showNotificationSuccess())
         },
 
         showNotificationSuccess() {
             this.notification = true
-            setTimeout(() => {
-                this.$router.replace({ name: "Dashboard" });
-            }, 700)
+            setTimeout(() => this.$router.replace({ name: "Dashboard" }), 700)
         }
     },
 
     beforeCreate() {
         document.title = 'New Expense'
-
-        const loginUser = localStorage.getItem('login')
-        if(!loginUser) {
-            this.$router.replace({ name: "Login" });
-        }
     }
 }
 </script>

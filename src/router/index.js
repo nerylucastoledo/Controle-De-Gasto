@@ -10,10 +10,27 @@ import NewCard from '../views/NewCard.vue'
 
 Vue.use(VueRouter)
 
+function guardMyroute(to, from, next) { 
+  var isAuthenticated= false; 
+  if(localStorage.getItem('login')) {
+    isAuthenticated = true
+  } else {
+    isAuthenticated= false
+  }
+  
+  if(isAuthenticated) { 
+    next()
+    
+  } else { 
+    next('/login') 
+  } 
+}
+
 const routes = [
   {
     path: '/',
     name: 'Dashboard',
+    beforeEnter : guardMyroute,
     component: Dashboard
   },
   {
@@ -34,16 +51,19 @@ const routes = [
   {
     path: '/card-invoice/:id',
     name: 'CardInvoice',
+    beforeEnter : guardMyroute,
     component: CardInvoice
   },
   {
     path: '/new-expense',
     name: 'NewExpense',
+    beforeEnter : guardMyroute,
     component: NewExpense
   },
   {
     path: '/new-card',
     name: 'NewCard',
+    beforeEnter : guardMyroute,
     component: NewCard
   },
 ]

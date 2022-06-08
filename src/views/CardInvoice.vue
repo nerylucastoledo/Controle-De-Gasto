@@ -8,7 +8,12 @@
 
         <div class="invoice">
             <ul class="invoice-people">
-                <li v-for="name in names" :key="name" :style="color" @click="filterName(name)">
+                <li 
+                    v-for="name in names" 
+                    :key="name" 
+                    :style="color" 
+                    @click="filterName(name)"
+                    >
                     {{name}}
                 </li>
             </ul>
@@ -20,9 +25,7 @@
 
                         <p>{{listValue[index] | numeroPreco}}</p>
 
-                        <span class="apagar" @click="deleteData(item)">
-                            X
-                        </span>
+                        <span class="apagar" @click="deleteData(item)">X</span>
 
                         <span class="editar" @click="openModalForm(item)">
                             <font-awesome-icon icon="edit" size="1x"/>
@@ -107,14 +110,14 @@ export default {
             Object.keys(resultAPi.val()).forEach((key) => {
                 this.theLastIdCard = resultAPi.val()["id"]
 
-                if(key != "cartao" && key != "cor" && key != "id") {
-                    if(!this.firstNameForInvoice.length) {
+                if (key != "cartao" && key != "cor" && key != "id") {
+                    if (!this.firstNameForInvoice.length) {
                         this.firstNameForInvoice = key
                         this.loadingInvoice()
                     }
                     this.names.push(key)
 
-                    for(var data in resultAPi.val()[key]) {
+                    for (var data in resultAPi.val()[key]) {
                         this.valueTotalInvoice += parseFloat(resultAPi.val()[key][data]["valor"])
                     }
                 }
@@ -139,9 +142,8 @@ export default {
             const resultApi = await this.getDataFromApi(`${this.userName}/${this.month}/banco${this.params}/${this.namePeople}`)
 
             for (var data in resultApi.val()) {
-                if(data != "cartao" && data != "cor" && data != "id") {
+                if (data != "cartao" && data != "cor" && data != "id") {
                     this.listItem.push(data)
-
                     this.listValue.push(resultApi.val()[data]["valor"])
                 }
             }
@@ -181,12 +183,14 @@ export default {
                     this.valueTotalInvoice = 0
                     this.getInvoice()
                     this.loadingInvoice()
-                }, 1000);
+                }, 1000)
             })
         },
 
         async getDataFromApi(params) {
-            const resultApi = await firebase.database().ref(params).once("value", snapshot => snapshot.val())
+            const resultApi = await firebase.database()
+                                    .ref(params)
+                                    .once("value", snapshot => snapshot.val())
 
             return resultApi
         }

@@ -1,7 +1,7 @@
 <template>
     <section class="container">
         <h1 class="titulo">Novo cartão</h1>
-        <form action="#" @submit.prevent="newCardSubmit" class="new-expense">
+        <form @submit.prevent="newCardSubmit" class="new-expense">
 
             <label for="colorCard">Cor do cartão</label>
             <div class="color-input">
@@ -60,11 +60,10 @@ export default {
                 cartao: this.newCard,
                 cor: this.colorCard,
                 id: this.lastIdCard.toString()
-            }).then(() => {
+            })
+            .then(() => {
                 this.notification = true
-                setTimeout(() => {
-                    this.$router.replace({ name: "Dashboard" });
-                }, 1000);
+                setTimeout(() => this.$router.replace({ name: "Dashboard" }), 1000)
             })
         },
 
@@ -74,9 +73,8 @@ export default {
             .ref(`${this.userName}/${this.month}`)
             .once("value", snapshot => {
                 if(snapshot.exists()) {
-                    Object.keys(snapshot.val()).forEach((item) => {
-                        aux.push(item)
-                    })
+                    Object.keys(snapshot.val())
+                    .forEach((item) => aux.push(item))
                 }
             })
             this.lastIdCard = parseInt(aux.length) ? parseInt(aux.length) + 1 : 0
@@ -86,12 +84,7 @@ export default {
     created() {
         document.title = 'New Card'
 
-        const loginUser = localStorage.getItem('login')
-        if(!loginUser) {
-            this.$router.replace({ name: "Login" });
-        } else {
-            this.getDatas()
-        }
+        this.getDatas()
     }
 }
 </script>

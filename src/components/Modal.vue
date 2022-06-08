@@ -1,6 +1,6 @@
 <template>
     <transition mode="out-in">
-        <form action="#" @submit.prevent="login" class="modal-form">
+        <form @submit.prevent="login" class="modal-form">
             <label for="item">Item</label>
             <input type="text" id="item" v-model="item" placeholder="O que é?" readonly>
 
@@ -35,18 +35,14 @@ export default {
             this.valueItem = from[2]
         });
 
-        await this.$root.$on('updateData', (urlParams)=> {
+        this.$root.$on('updateData', (urlParams)=> {
             firebase.database()
             .ref(urlParams)
             .update({
                 categoria: this.category,
                 valor: parseInt(this.valueItem)
             })
-            .then(() => {
-                setTimeout(() => {
-                    this.$router.replace({ name: "Dashboard" });
-                }, 500);
-            })
+            .then(() => setTimeout(() => this.$router.replace({ name: "Dashboard" }), 500))
         });
     }
 }

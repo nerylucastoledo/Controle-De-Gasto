@@ -65,8 +65,8 @@ export default {
                 localStorage.clear()
                 this.$router.replace({
                     name: "Login"
-                });
-            });
+                })
+            })
         }
     },
 }

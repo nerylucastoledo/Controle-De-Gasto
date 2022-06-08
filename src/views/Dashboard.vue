@@ -5,22 +5,17 @@
                 <select v-model="monthSelected" class="filter-selected">
                     <option disabled value="">Selecione o mês</option>
 
-                    <option v-for="month in months" :key="month">
-                        {{month}}
-                    </option>
+                    <option v-for="month in months" :key="month">{{month}}</option>
                 </select>
 
                 <select v-model="yearSelected" class="filter-selected">
                     <option disabled value="">Selecione o ano</option>
 
-                    <option v-for="year in years" :key="year">
-                        {{year}}
-                    </option>
+                    <option v-for="year in years" :key="year">{{year}}</option>
                 </select>
             </div>
 
             <Cards :cards="dataInvoice"></Cards>
-
         </div>
 
         <div v-else>
@@ -61,13 +56,7 @@ export default {
                 11: "Novembro",
                 12: "Dezembro"
             },
-            years: [
-                "2021",
-                "2022",
-                "2023",
-                "2024",
-                "2025"
-            ],
+            years: ["2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"],
             monthSelected: "",
             yearSelected: "",
             dataInvoice: null,
@@ -106,13 +95,15 @@ export default {
             await firebase.database()
             .ref(`${this.userName}/${this.month}`)
             .once("value", snapshot => {
-                if(snapshot.exists()) {
-                    if(snapshot.val() === null) {
+                if (snapshot.exists()) {
+                    if (snapshot.val() === null) {
                         this.dataInvoice = []
                         this.loading = 0
 
                     } else {
-                        this.dataInvoice = Object.keys(snapshot.val()).map((key) => snapshot.val()[key])
+                        this.dataInvoice = Object
+                                            .keys(snapshot.val())
+                                            .map((key) => snapshot.val()[key])
 
                         this.writeApiData(snapshot.val())
                     }
@@ -134,7 +125,7 @@ export default {
                 ])
 
                 Object.keys(datas[item]).forEach((names) => {
-                    for(var key in datas[item][names]) {
+                    for (var key in datas[item][names]) {
                         const category = datas[item][names][key]["categoria"]
                         
                         this.$store.dispatch('addDatasCategorys', category)
@@ -151,17 +142,12 @@ export default {
     created() {
         document.title = 'Dashboard'
 
-        const loginUser = localStorage.getItem('login')
-        if(!loginUser) {
-            this.$router.replace({ name: "Login" });
+        this.userName = localStorage.getItem('displayName').replace(' ', '')
 
-        } else {
-            this.userName = localStorage.getItem('displayName').replace(' ', '')
-
-            const date = new Date()
-            this.yearSelected = date.getFullYear().toString()
-            this.monthSelected = this.months[`${date.getMonth() + 1}`]
-        }
+        const date = new Date()
+        this.yearSelected = date.getFullYear().toString()
+        this.monthSelected = this.months[`${date.getMonth() + 1}`]
+        
     }
 }
 

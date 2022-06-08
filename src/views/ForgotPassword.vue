@@ -38,14 +38,13 @@ export default {
     methods: {
         forgot() {
             this.error = null;
-            firebase.auth().sendPasswordResetEmail(this.email)
-            .then(() => {
-                this.emailSending = true;
-            })
+            firebase.auth()
+            .sendPasswordResetEmail(this.email)
+            .then(() => this.emailSending = true)
             .catch(() => {
-                this.emailSending = false;
-                this.error = "Email não encontrado.";
-            });
+                this.emailSending = false
+                this.error = "Email não encontrado."
+            })
         }
     },
 

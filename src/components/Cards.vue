@@ -2,7 +2,10 @@
     <section class="container cards">
         <div v-if="cards.length">
             <div v-for="(card, key) in cards" :key="card+key">
-                <router-link v-if="card['id']" :to="{ name: 'CardInvoice', params: { id: card['id']}}">
+                <router-link 
+                    v-if="card['id']" 
+                    :to="{ name: 'CardInvoice', params: { id: card['id']}}"
+                    >
                     <div class="box-invoice" :style="{backgroundColor: card['cor']}">
                         <h1 class="titulo-card">{{card["cartao"]}}</h1>
                         
@@ -83,7 +86,6 @@ export default {
                     }
                 }
             })
-            
             return total
         },
 
