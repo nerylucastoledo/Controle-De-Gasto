@@ -107,7 +107,8 @@ export default {
             this.items = resultAPi.val()
             this.color.backgroundColor = resultAPi.val()["cor"]
 
-            Object.keys(resultAPi.val()).forEach((key) => {
+            Object.keys(resultAPi.val())
+            .forEach((key) => {
                 this.theLastIdCard = resultAPi.val()["id"]
 
                 if (key != "cartao" && key != "cor" && key != "id") {
@@ -158,6 +159,7 @@ export default {
         openModalForm(dataForEdit) {
             document.querySelector('.formulario').style.display = 'initial'
             window.scrollTo({ top: 0, behavior: "smooth" })
+            
             this.getDataClicked(dataForEdit)
         },
 
