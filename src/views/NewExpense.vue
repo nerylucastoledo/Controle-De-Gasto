@@ -143,16 +143,17 @@ export default {
 
             if (this.open) {
                 for (let index = 0; index < this.cardInstallment; index++) {
-                    var [esseMes, esseAno] = this.month.split(20)
-                    var indexDoMes = this.months.indexOf(esseMes) + index
+                    var [currentMonth, currentYear] = this.month.split(20)
+                    var indexOfMonth = this.months.indexOf(currentMonth) + index
+                    var lengthMonths = 11
 
-                    if (indexDoMes > 11) {
-                        esseAno = parseInt(esseAno) + 1
-                        indexDoMes = (indexDoMes - 1) - 11
+                    if (indexOfMonth > lengthMonths) {
+                        currentYear = parseInt(currentYear) + 1
+                        indexOfMonth = (indexOfMonth - 1) - lengthMonths
                     }
 
                     var name = `${this.item} ${index + 1}-${this.cardInstallment}`
-                    var month = `${this.months[indexDoMes]}20${esseAno}`
+                    var month = `${this.months[indexOfMonth]}20${currentYear}`
                     URL = `/${this.userName}/${month}/${card.banco}`
 
                     this.verifyDataOnDatabase(URL, people, category, name, card, month)
