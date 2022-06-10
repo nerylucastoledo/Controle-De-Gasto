@@ -94,18 +94,17 @@ export default {
 
             await firebase.database()
             .ref(`${this.userName}/${this.month}`)
-            .once("value", snapshot => {
-                if (snapshot.exists()) {
-                    if (snapshot.val() === null) {
+            .once("value", result => {
+                if (result.exists()) {
+                    if (result.val() === null) {
                         this.dataInvoice = []
                         this.loading = 0
 
                     } else {
-                        this.dataInvoice = Object
-                                            .keys(snapshot.val())
-                                            .map((key) => snapshot.val()[key])
+                        this.dataInvoice = Object.keys(result.val())
+                                            .map((key) => result.val()[key])
 
-                        this.writeApiData(snapshot.val())
+                        this.writeApiData(result.val())
                     }
 
                 } else {
@@ -116,7 +115,8 @@ export default {
         },
 
         writeApiData(datas) {
-            Object.keys(datas).forEach((item) => {
+            Object.keys(datas)
+            .forEach((item) => {
                 this.$store.dispatch('addRelationshipCardAndBank', [
                     datas[item]["cartao"], 
                     datas[item]["cor"], 
@@ -124,7 +124,8 @@ export default {
                     item
                 ])
 
-                Object.keys(datas[item]).forEach((names) => {
+                Object.keys(datas[item])
+                .forEach((names) => {
                     for (var key in datas[item][names]) {
                         const category = datas[item][names][key]["categoria"]
                         
@@ -140,7 +141,7 @@ export default {
     },
     
     created() {
-        document.title = 'Dashboard'
+        document.title = 'Home'
 
         this.userName = localStorage.getItem('displayName').replace(' ', '')
 

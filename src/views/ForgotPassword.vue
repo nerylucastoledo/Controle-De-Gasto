@@ -49,7 +49,7 @@ export default {
     },
 
     created() {
-        document.title = 'Forgot Password'
+        document.title = 'Resetar Senha'
     }
 }
 

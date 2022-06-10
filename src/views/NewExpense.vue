@@ -133,47 +133,76 @@ export default {
 
     methods: {
         newExpense() {
+            var people = this.peopleSelected === 'Novo' ? this.namePeople : this.peopleSelected
+            var category = this.categorySelected === 'Novo' ? this.nameCategory : this.categorySelected
             const card = this.bankAndCardRelationship[this.cardSelected]
-            var url = `/${this.userName}/${this.month}/${card.banco}`
-            var newExpenseForPeople = this.peopleSelected === 'Novo' ? this.namePeople : this.peopleSelected
-            var newExpenseForCategory = this.categorySelected === 'Novo' ? this.nameCategory : this.categorySelected
+            var URL = `/${this.userName}/${this.month}/${card.banco}`
 
-            newExpenseForPeople = newExpenseForPeople[0].toUpperCase() + newExpenseForPeople.substr(1)
-            newExpenseForCategory = newExpenseForCategory[0].toUpperCase() + newExpenseForCategory.substr(1)
+            people = people[0].toUpperCase() + people.substr(1)
+            category = category[0].toUpperCase() + category.substr(1)
 
-            firebase.database()
-            .ref(url)
-            .once("value", data => {
-                if (data.exists()){
-                    const body = {
-                        [this.item]: {
-                            categoria: newExpenseForCategory,
-                            valor: parseFloat(this.valueItem)
-                        }
+            if (this.open) {
+                for (let index = 0; index < this.cardInstallment; index++) {
+                    var [esseMes, esseAno] = this.month.split(20)
+                    var indexDoMes = this.months.indexOf(esseMes) + index
+
+                    if (indexDoMes > 11) {
+                        esseAno = parseInt(esseAno) + 1
+                        indexDoMes = (indexDoMes - 1) - 11
                     }
-                    this.saveDataOnDatabase(url, newExpenseForPeople, body)
+
+                    var name = `${this.item} ${index + 1}-${this.cardInstallment}`
+                    var month = `${this.months[indexDoMes]}20${esseAno}`
+                    URL = `/${this.userName}/${month}/${card.banco}`
+
+                    this.verifyDataOnDatabase(URL, people, category, name, card, month)
+                }
+
+                return
+            }
+
+            this.verifyDataOnDatabase(URL, people, category, this.item, card, this.month)
+        },
+
+        async verifyDataOnDatabase(url, people, category, name, card, month) {
+            await firebase.database()
+            .ref(url)
+            .once("value", result => {
+                if (result.exists()) {
+                    this.newExpenseForExistingCard(url, people, category, name)
                     return
                 }
 
-                this.newExpenseToNewCard(card)
+                this.newExpenseToNewCard(card, name, month)
             })
         },
 
-        newExpenseToNewCard(card) {
-            var url = `/${this.userName}/${this.month}`
+        newExpenseForExistingCard(url, people, category, name) {
+            const body = {
+                [name]: {
+                    categoria: category,
+                    valor: parseFloat(this.valueItem)
+                }
+            }
+            this.saveDataOnDatabase(url, people, body)
+        },
+
+
+        newExpenseToNewCard(card, name, month) {
+            const URL = `/${this.userName}/${month}`
             const body = {
                 cartao: this.cardSelected,
                 cor: card.cor,
                 id: card.id,
                 [this.peopleSelected]: {
-                    [this.item]: {
+                    [name]: {
                         categoria: this.categorySelected,
                         valor: parseFloat(this.valueItem)
                     }
                 }
             }
 
-            this.saveDataOnDatabase(url, card.banco, body)
+            this.saveDataOnDatabase(URL, card.banco, body)
         },
 
         async saveDataOnDatabase(url, child, body) {
@@ -192,7 +221,7 @@ export default {
     },
 
     beforeCreate() {
-        document.title = 'New Expense'
+        document.title = 'Novo Gasto'
     }
 }
 </script>

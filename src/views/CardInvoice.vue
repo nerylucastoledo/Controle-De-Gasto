@@ -101,8 +101,9 @@ export default {
     methods: {
         async getInvoice() {
             this.params = this.$route.params.id
+            const URL = `${this.userName}/${this.month}/banco${this.params}`
 
-            const resultAPi = await this.getDataFromApi(`${this.userName}/${this.month}/banco${this.params}`)
+            const resultAPi = await this.getDataFromApi(URL)
 
             this.items = resultAPi.val()
             this.color.backgroundColor = resultAPi.val()["cor"]
@@ -137,10 +138,10 @@ export default {
             this.listValue = []
             this.listItem = []
             this.valuePeopleTotal = 0
-
             this.namePeople = this.$route.query.name || this.firstNameForInvoice
+            const URL = `${this.userName}/${this.month}/banco${this.params}/${this.namePeople}`
 
-            const resultApi = await this.getDataFromApi(`${this.userName}/${this.month}/banco${this.params}/${this.namePeople}`)
+            const resultApi = await this.getDataFromApi(URL)
 
             for (var data in resultApi.val()) {
                 if (data != "cartao" && data != "cor" && data != "id") {
@@ -176,8 +177,10 @@ export default {
         },
 
         deleteData(item) {
+            const URL = `${this.userName}/${this.month}/banco${this.$route.params.id}/${this.namePeople}`
+            
             firebase.database()
-            .ref(`${this.userName}/${this.month}/banco${this.$route.params.id}/${this.namePeople}`)
+            .ref(URL)
             .child(item)
             .remove(() => {
                 setTimeout(() => {
@@ -192,14 +195,14 @@ export default {
         async getDataFromApi(params) {
             const resultApi = await firebase.database()
                                     .ref(params)
-                                    .once("value", snapshot => snapshot.val())
+                                    .once("value", result => result.val())
 
             return resultApi
         }
     },
 
     created() {
-        document.title = 'Card Invoice'
+        document.title = 'Fatura Do Cartão'
 
         this.getInvoice()
         this.loadingInvoice()

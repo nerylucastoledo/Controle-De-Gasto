@@ -53,9 +53,12 @@ export default {
 
     methods: {
         newCardSubmit() {
+            const url = `/${this.userName}/${this.month}`
+            const childUrl = `banco${this.lastIdCard.toString()}`
+
             firebase.database()
-            .ref(`/${this.userName}/${this.month}`)
-            .child(`banco${this.lastIdCard.toString()}`)
+            .ref(url)
+            .child(childUrl)
             .update({
                 cartao: this.newCard,
                 cor: this.colorCard,
@@ -68,12 +71,14 @@ export default {
         },
 
         async getDatas() {
+            const url = `${this.userName}/${this.month}`
+
             var aux = []
             await firebase.database()
-            .ref(`${this.userName}/${this.month}`)
-            .once("value", snapshot => {
-                if(snapshot.exists()) {
-                    Object.keys(snapshot.val())
+            .ref(url)
+            .once("value", result => {
+                if(result.exists()) {
+                    Object.keys(result.val())
                     .forEach((item) => aux.push(item))
                 }
             })
@@ -82,8 +87,7 @@ export default {
     },
 
     created() {
-        document.title = 'New Card'
-
+        document.title = 'Novo Cartão'
         this.getDatas()
     }
 }

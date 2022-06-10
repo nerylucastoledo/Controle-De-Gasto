@@ -38,10 +38,10 @@ export default {
         register() {
             firebase.auth()
             .createUserWithEmailAndPassword(this.email, this.password)
-            .then(data => {
+            .then(result => {
                 firebase.auth().currentUser.updateProfile({displayName: this.name})
                 .then(() => {
-                    this.$store.dispatch("fetchUser", data)
+                    this.$store.dispatch("fetchUser", result)
                     setTimeout(() => this.$router.replace({ name: "Dashboard" }), 800)
                 })
             })
@@ -50,7 +50,7 @@ export default {
     },
 
     created() {
-        document.title = 'Register'
+        document.title = 'Criar Conta'
     }
 }
 
