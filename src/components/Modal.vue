@@ -1,7 +1,7 @@
 <template>
     <transition mode="out-in">
-        <form @submit.prevent="login" class="modal-form">
-            <label for="item">Item</label>
+        <form @submit.prevent="login" class="teste">
+            <label for="item" style="color: 'red';">Item</label>
             <input type="text" id="item" v-model="item" placeholder="O que é?" readonly>
 
             <label for="category">Categoria</label>
@@ -48,8 +48,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+
 #item {
     background-color: rgb(218, 212, 212);
 }
+
+.teste label {
+    color: #097a7e !important;
+}
+
 </style>

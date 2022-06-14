@@ -1,22 +1,40 @@
 <template>
     <section class="container">
-        <h1 class="titulo">Login</h1>
+        <h1 class="title">Login</h1>
 
-        <p v-if="error" class="not-found">{{error}}</p>
+        <p class="not-found" v-if="error">{{error}}</p>
 
-        <form @submit.prevent="login">
+        <form class="form-enter" @submit.prevent="login">
             <label for="email">E-mail</label>
-            <input type="email" id="email" v-model="email" placeholder="Digite seu e-mail" required>
+            <input 
+                type="email" 
+                id="email" 
+                placeholder="Digite seu e-mail" 
+                required
+                v-model="email"
+            >
 
             <label for="password">Senha</label>
-            <input type="password" id="password" autocomplete="on" v-model="password" placeholder="Sua senha" required>
+            <input 
+                type="password" 
+                id="password" 
+                autocomplete="off" 
+                placeholder="Sua senha" 
+                required
+                v-model="password"
+            >
 
-            <router-link to="/forgot-password" class="esqueceu-senha">Esqueceu a senha?</router-link>
+            <button class="btn-save" type="submit">Entrar</button>
 
-            <button class="botao" type="submit">Entrar</button>
-
-            <router-link to="/register" class="criar-conta">CRIAR CONTA</router-link>
+            <router-link to="/forgot-password" class="forgot-password">Esqueceu a senha?</router-link>
         </form>
+
+        <div class="box-redirect">
+            <p>
+                Não tem uma conta?
+                <router-link to="/register" class="other-page">Cadastre-se</router-link>
+            </p>
+        </div>
     </section>
 </template>
 
@@ -58,51 +76,59 @@ export default {
 
 <style>
 
-label, input {
-    display: block;
+.form-enter {
+  max-width: 100%;
+  margin: 40px auto;
+  background-color: #097a7e;
+  box-shadow: 0 7px 7px rgb(0 0 0 / 25%);
+  padding: 30px;
+  border-radius: 10px;
 }
 
-label {
-    color: #B9DD2A;
-    font-size: 24px;
+.form-enter label, .form-enter input {
+  display: block;
+}
+
+.form-enter label {
+    color: #fff !important;
+    font-size: 18px;
     margin-bottom: 10px;
+    font-weight: bold;
 }
 
-input {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid #B9DD2A;
-    font-size: 18px;
-    padding: 10px 5px;
-    font-family: 'Montserrat';
-    margin-bottom: 30px;
+.form-enter input, .form-enter select, .filter select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid rgb(224, 222, 222);
+  background-color: #fff;
+  font-size: 1rem;
 }
 
-.esqueceu-senha {
-    color: #B9DD2A;
-    margin-top: 10px;
-    display: flex;
-    justify-content: right;
-    font-size: 18px;
+.form-enter input::placeholder {
+  color: rgb(141, 138, 138);
 }
 
-.criar-conta {
-    color: #B9DD2A;
-    text-decoration: none;
+.forgot-password {
     display: block;
     text-align: center;
-    font-weight: bold;
-    font-size: 18px;
-    padding-bottom: 20px;
+    color: #fff;
+    margin: 30px 0 0;
 }
 
-.not-found {
-    text-align: center;
-    margin-bottom: 30px;
-    background-color: red;
-    border-radius: 10px;
+.box-redirect {
+    background-color: #097a7e;
     color: #fff;
-    padding: 5px;
+    margin-top: 20px;
+    border-radius: 5px;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.box-redirect a {
+    color: #fff;
     font-weight: bold;
 }
 

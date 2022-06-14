@@ -1,58 +1,115 @@
 <template>
     <section class="container">
-        <h1 class="titulo">Novo gasto</h1>
+        <h1 class="title">Novo gasto</h1>
         
-        <form @submit.prevent="newExpense" class="new-expense">
+        <form class="new-expense form-enter" @submit.prevent="newExpense">
             <label for="card">Cartão</label>
-            <select v-model="cardSelected" id="card" class="filter-selected">
+            <select  
+                id="card" 
+                class="filter-selected"
+                v-model="cardSelected"
+                >
                 <option disabled value="">Selecione o cartão</option>
 
-                <option v-for="card in cards" :key="card">{{card}}</option>
+                <option 
+                    v-for="card in cards" 
+                    :key="card"
+                    >
+                    {{card}}
+                </option>
             </select>
 
             <label for="people">Pessoa</label>
-            <select v-model="peopleSelected" id="people" class="filter-selected">
+            <select 
+                id="people" 
+                class="filter-selected"
+                v-model="peopleSelected"
+                >
                 <option disabled value="">Selecione a pessoa</option>
 
-                <option v-for="people in peoples" :key="people">{{people}}</option>
+                <option 
+                    v-for="people in peoples" 
+                    :key="people"
+                    >
+                    {{people}}
+                </option>
             </select>
 
             <div v-if="peopleSelected === 'Novo'">
                 <label for="people">Nome da pessoa</label>
-                <input type="text" id="people" v-model="namePeople" placeholder="Nome da pessoa?">
+                <input 
+                    type="text" 
+                    id="people" 
+                    placeholder="Nome da pessoa?"
+                    v-model="namePeople"
+                >
             </div>
 
             <label for="item">Item</label>
-            <input type="text" id="item" v-model="item" placeholder="O que?">
+            <input 
+                type="text" 
+                id="item" 
+                placeholder="O que?"
+                v-model="item"
+            >
 
             <label for="category">Categoria</label>
-            <select v-model="categorySelected" id="category" class="filter-selected">
+            <select 
+                id="category" 
+                class="filter-selected"
+                v-model="categorySelected"
+                >
                 <option disabled value="">Selecione a categoria</option>
 
-                <option v-for="category in categorys" :key="category">{{category}}</option>
+                <option 
+                    v-for="category in categorys" 
+                    :key="category"
+                    >
+                    {{category}}
+                </option>
             </select>
 
             <div v-if="categorySelected === 'Novo'">
                 <label for="category">Nome da categoria</label>
-                <input type="text" id="category" v-model="nameCategory" placeholder="Categoria?">
+                <input 
+                    type="text" 
+                    id="category" 
+                    placeholder="Categoria?"
+                    v-model="nameCategory"
+                >
             </div>
 
             <div class="open-installment">
                 <label>
-                    <input type="checkbox" v-model="open" id="open-card-installment"> 
+                    <input 
+                        type="checkbox" 
+                        id="open-card-installment"
+                        v-model="open"
+                    > 
                     Tem parcelas?
                 </label>
             </div>
 
             <div v-if="open">
                 <label for="card-installment">Parcelas</label>
-                <input type="number" id="card-installment" v-model="cardInstallment" placeholder="Quantas?">
+                <input 
+                    type="number" 
+                    id="card-installment" 
+                    placeholder="Quantas?"
+                    v-model="cardInstallment"
+                >
             </div>
 
             <label for="valueItem">Valor</label>
-            <input type="number" id="valueItem" step="0.01" v-model="valueItem" placeholder="Qual valor?">
+            <input 
+                type="number" 
+                id="valueItem" 
+                step="0.01" 
+                placeholder="Qual valor?"
+                v-model="valueItem"
+            >
 
-            <button class="botao" type="submit">Inserir</button>
+            <button class="btn-save" type="submit">Inserir</button>
         </form>
 
         <div v-if="notification">
@@ -141,46 +198,45 @@ export default {
             people = people[0].toUpperCase() + people.substr(1)
             category = category[0].toUpperCase() + category.substr(1)
 
-            if (this.open) {
+            if (this.open && this.cardInstallment > 1) {
                 for (let index = 0; index < this.cardInstallment; index++) {
                     var [currentMonth, currentYear] = this.month.split(20)
                     var indexOfMonth = this.months.indexOf(currentMonth) + index
-                    var lengthMonths = 11
+                    var numberOfMonths = 11
 
-                    if (indexOfMonth > lengthMonths) {
+                    if (indexOfMonth > numberOfMonths) {
                         currentYear = parseInt(currentYear) + 1
-                        indexOfMonth = (indexOfMonth - 1) - lengthMonths
+                        indexOfMonth = (indexOfMonth - 1) - numberOfMonths
                     }
 
-                    var name = `${this.item} ${index + 1}-${this.cardInstallment}`
+                    var nameItem = `${this.item} ${index + 1}-${this.cardInstallment}`
                     var month = `${this.months[indexOfMonth]}20${currentYear}`
                     URL = `/${this.userName}/${month}/${card.banco}`
 
-                    this.verifyDataOnDatabase(URL, people, category, name, card, month)
+                    this.verifyDataOnDatabase(URL, people, category, nameItem, card, month)
                 }
-
                 return
             }
 
             this.verifyDataOnDatabase(URL, people, category, this.item, card, this.month)
         },
 
-        async verifyDataOnDatabase(url, people, category, name, card, month) {
+        async verifyDataOnDatabase(url, people, category, nameItem, card, month) {
             await firebase.database()
             .ref(url)
             .once("value", result => {
                 if (result.exists()) {
-                    this.newExpenseForExistingCard(url, people, category, name)
+                    this.newExpenseForExistingCard(url, people, category, nameItem)
                     return
                 }
 
-                this.newExpenseToNewCard(card, name, month)
+                this.newExpenseToNewCard(card, nameItem, month)
             })
         },
 
-        newExpenseForExistingCard(url, people, category, name) {
+        newExpenseForExistingCard(url, people, category, nameItem) {
             const body = {
-                [name]: {
+                [nameItem]: {
                     categoria: category,
                     valor: parseFloat(this.valueItem)
                 }
@@ -189,14 +245,14 @@ export default {
         },
 
 
-        newExpenseToNewCard(card, name, month) {
+        newExpenseToNewCard(card, nameItem, month) {
             const URL = `/${this.userName}/${month}`
             const body = {
                 cartao: this.cardSelected,
                 cor: card.cor,
                 id: card.id,
                 [this.peopleSelected]: {
-                    [name]: {
+                    [nameItem]: {
                         categoria: this.categorySelected,
                         valor: parseFloat(this.valueItem)
                     }
@@ -227,35 +283,49 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
-.new-expense {
-    padding-right: 7px;
+.container {
+    padding: 0 30px;
 }
 
-.new-expense input{
-    background-color: #EFF2E4;
-    border-bottom: none;
-    border-radius: 10px;
+.new-expense {
+    margin-top: 40px;
+    background-color: #fff;
+    box-shadow: 0 7px 7px rgb(0 0 0 / 25%);
+    padding: 30px;
+}
+
+.new-expense label {
+    color: #097a7e !important;
 }
 
 .new-expense select {
-    width: 100%;
-    display: block;
-    margin-bottom: 30px;
+    background-color: #097a7e;
+    color: #fff;
 }
 
 .open-installment label {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
-    font-size: 24px;
 }
+
 .open-installment input {
     width: 15px;
     height: 15px;
     padding: 0;
     margin: 0 10px;
+}
+
+#item {
+    background-color: #fff;
+}
+
+.btn-save {
+    color: #fff;
+    background-image: linear-gradient(to right, #097a7e, #097a7e);
+    margin-bottom: 0px;
 }
 
 </style>

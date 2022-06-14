@@ -1,23 +1,34 @@
 <template>
     <section class="container">
-        <h1 class="titulo">Esqueceu a senha?</h1>
+        <h1 class="title">Esqueceu a senha?</h1>
 
-        <p class="error-user" v-if="error">{{error}}</p>
+        <p class="not-found" v-if="error">{{error}}</p>
 
-        <form v-if="!emailSending" action="#" @submit.prevent="forgot">
+        <form class="form-enter" v-if="!emailSending" @submit.prevent="forgot">
             <label for="email">Digite seu e-mail</label>
-            <input type="email" id="email" v-model="email" placeholder="Digite seu e-mail">
+            <input 
+                type="email" 
+                id="email" 
+                placeholder="Digite seu e-mail"
+                v-model="email"
+            >
 
-           <button class="botao" type="submit">Recuper conta</button>
-
-           <router-link to="/login" class="criar-conta">LOGIN</router-link>
+           <button class="btn-save" type="submit">Enviar</button>
         </form>
 
         <div class="email-enviado" v-else>
             <p>Enviado! Verifique seu e-mail e spam</p>
 
-            <router-link to="/login" class="botao">Ok</router-link>
+            <router-link to="/login" class="btn-ok">Voltar</router-link>
         </div>
+
+        <div class="box-redirect" v-if="!emailSending">
+            <p>
+                Tem uma conta?
+                <router-link to="/login" class="other-page">Conecte-se</router-link>
+            </p>
+        </div>
+
     </section>
 </template>
 
@@ -40,7 +51,9 @@ export default {
             this.error = null;
             firebase.auth()
             .sendPasswordResetEmail(this.email)
-            .then(() => this.emailSending = true)
+            .then(() => {
+                this.emailSending = true
+            })
             .catch(() => {
                 this.emailSending = false
                 this.error = "Email não encontrado."
@@ -57,27 +70,30 @@ export default {
 
 <style scoped>
 
-.error-user {
-    background-color: red;
-    text-align: center;
-    font-size: 18px;
-    color: #fff;
-    padding: 5px;
-    border-radius: 10px;
-    margin-bottom: 40px;
-}
-
-.email-enviado {
-    text-align: center;
-    color: green;
-    font-weight: bold;
+.btn-save {
+    margin: 0 auto !important;
 }
 
 .email-enviado p {
-    margin-bottom: 40px;
+    text-align: center;
+    margin-top: 20px;
+    color: green;
+    font-size: 1.2rem;
 }
 
-a {
+.btn-ok {
+    display: block;
+    margin: 20px auto;
+    width: 200px;
+    padding: 5px 0;
+    font-size: 1.6rem;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    background-color: #097a7e;
+    cursor: pointer;
+    text-align: center;
     text-decoration: none;
 }
 

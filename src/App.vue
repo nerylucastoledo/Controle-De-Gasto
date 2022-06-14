@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-
     <Header/>
 
     <transition mode="out-in">
       <router-view />
     </transition>
+
   </div>
 </template>
 
@@ -17,16 +17,6 @@ export default {
   components: {
     Header,
   },
-
-  created() {
-    const loginUser = localStorage.getItem('login')
-
-    this.$store.state.user.displayName = localStorage.getItem('displayName')
-    
-    if(!loginUser) {
-      this.$router.replace({ name: "Login" });
-    }
-  }
 }
 </script>
 
@@ -46,45 +36,54 @@ body, a, ul, li, h1, h2, h3, p, img {
 .container {
   max-width: 600px;
   margin: 0 auto;
-  padding: 0px 15px;
+  padding: 0px 30px;
 }
 
-.titulo, .titulo-card {
-  font-size: 2rem;
+/* TITLE */
+.title {
+  margin-top: 40px;
   text-align: center;
+  font-size: 2rem;
+  color: #097a7e;
 }
 
-.titulo {
-  color: #B9DD2A;
-  margin-bottom: 40px;
-  margin-top: 60px;
-  font-weight: bold;
-}
-
-.botao {
-  width: 200px;
-  color: #fff;
-  background-color: #B9DD2A;
-  font-size: 18px;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 0;
+/* BUTTON */
+.btn-save {
   display: block;
-  margin: 40px auto 40px;
+  margin: 20px auto;
+  width: 200px;
+  padding: 5px 0;
+  font-size: 1.6rem;
+  box-sizing: border-box;
+  border-radius: 5px;
+  border: none;
+  background-image: linear-gradient(to right, rgb(226, 219, 219),  #ffffff );
+  color: #097a7e;
+  cursor: pointer;
 }
 
-.v-enter,
-.v-leave-to {
+/* NOT FOUND */
+.not-found {
+  text-align: center;
+  margin-bottom: 20px;
+  color: red;
+  margin-top: 40px;
+  font-size: 1.2rem;
+}
+
+.v-enter, .v-leave-to {
   opacity: 0;
 }
+
 .v-enter {
   transform: translate3d(0, -20px, 0);
 }
+
 .v-leave-to {
   transform: translate3d(0, 20px, 0);
 }
-.v-enter-active,
-.v-leave-active {
+
+.v-enter-active, .v-leave-active {
   transition: all 0.3s;
 }
 

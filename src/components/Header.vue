@@ -74,28 +74,34 @@ export default {
 </script>
 
 <style>
+
 #logo {
     width: 100px;
     height: 50px;
 }
 
 .header {
-    padding: 10px 15px;
+    padding: 10px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 8px rgb(30 60 90 / 10%);
 }
 
+.hamburguer {
+    cursor: pointer;
+}
+
 .hamburguer div {
-  width: 35px;
-  height: 5px;
-  background-color: black;
-  margin: 6px 0;
+    width: 35px;
+    height: 5px;
+    background-color: #3ba0a3;
+    margin: 6px 0;
 }
 
 .menu {
-    background-color: #B9DD2A;
+    background-color: #3ba0a3;
+    border-radius: 5px;
     position: absolute;
     right: 15px;
     top: 80px;
@@ -113,7 +119,7 @@ export default {
     height: 0px;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-bottom: 10px solid #B9DD2A;
+    border-bottom: 10px solid #3ba0a3;
 }
 
 .menu li a, .menu li p {
@@ -123,8 +129,12 @@ export default {
 }
 
 .menu li {
-    border-bottom: 1px solid #fff;
+    border-bottom: 1px solid rgb(190, 189, 189);
     padding: 10px;
+}
+
+.menu li:last-child {
+    border-bottom: none;
 }
 
 .ativo {

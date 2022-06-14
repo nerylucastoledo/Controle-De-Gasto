@@ -1,19 +1,28 @@
 <template>
     <section class="container">
-        <h1 class="titulo">Novo cartão</h1>
-        <form @submit.prevent="newCardSubmit" class="new-expense">
-
+        <h1 class="title">Novo cartão</h1>
+        
+        <form @submit.prevent="newCardSubmit" class="new-expense form-enter">
             <label for="colorCard">Cor do cartão</label>
             <div class="color-input">
-                <input type="color" id="colorCard" v-model="colorCard">
+                <input 
+                    type="color" 
+                    id="colorCard" 
+                    v-model="colorCard"
+                >
 
                 <p class="color-card" :style="{backgroundColor: colorCard}"></p>
             </div>
 
             <label for="newCard">Nome do cartão</label>
-            <input type="text" id="newCard" v-model="newCard" placeholder="Nome do cartão">
+            <input 
+                type="text" 
+                id="newCard" 
+                placeholder="Nome do cartão"
+                v-model="newCard"
+            >
 
-           <button class="botao" type="submit">Cadastrar</button>
+           <button class="btn-save" type="submit">Cadastrar</button>
         </form>
 
         <div v-if="notification">
@@ -95,6 +104,10 @@ export default {
 
 <style scoped>
 
+.container {
+    padding: 0 30px;
+}
+
 .color-card {
     font-weight: bold;
     margin-top: -20px;
@@ -111,8 +124,8 @@ export default {
     align-items: center;
 }
 
-.botao {
-    margin-top: 10px;
+.btn-save {
+    margin-bottom: 0px;
 }
 
 </style>

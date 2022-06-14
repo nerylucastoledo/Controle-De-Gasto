@@ -31,8 +31,8 @@
             <p class="register-card">Cadastre um cartão</p>
 
              <router-link to="/new-card">
-                <button class="botao botao-icon">
-                    <span>Clique aqui</span>
+                <button class="btn-save botao-icon">
+                    <span>Cadastrar </span>
                     <font-awesome-icon icon="plus-square" size="1x"/>
                 </button>
              </router-link>
@@ -131,23 +131,17 @@ export default {
 
 <style>
 
+.container {
+    padding: 0 10px;
+}
+
 .cards a {
     text-decoration: none;
 }
 
 .cards {
-    margin-top: 50px;
+    margin-top: 20px;
     text-align: center;
-}
-
-.none {
-    margin-bottom: 40px;
-    font-size: 18px;
-}
-
-.register-card {
-    font-size: 14px;
-    margin-bottom: -30px;
 }
 
 /* BOX INVOICE */
@@ -161,35 +155,48 @@ export default {
 .titulo-card {
     font-weight: 300;
     margin-bottom: 10px;
+    font-size: 1.4rem;
 }
 
 .value-invoice {
-    font-size: 24px;
-}
-
-.botao-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.botao-icon span {
-    margin-right: 10px;
+    font-size: 1.4rem;
 }
 
 .value-total-invoice {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    border-top: 1px solid #B9DD2A;
-    border-bottom: 1px solid #B9DD2A;
+    margin-bottom: 30px;
+    font-size: 1.2rem;
+    color: #097a7e;
     padding: 10px 0;
-    margin-bottom: 40px;
-    color: #222;
+    border-top: 3px solid #097a7e;
+    border-bottom: 3px solid #097a7e;
 }
 
 .value-total-invoice span {
-    color: #B9DD2A;
+    font-weight: bold;
+}
+
+.none {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.register-card {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.botao-icon {
+    margin-top: 0px;
+    color: #fff;
+    background-image: linear-gradient(to right, #097a7e, #097a7e);
+    margin-bottom: 0px;
+}
+
+a {
+    text-decoration: none;
 }
 
 </style>

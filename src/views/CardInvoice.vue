@@ -37,12 +37,12 @@
 
         <h2 class="total">Total: {{valuePeopleTotal | numeroPreco}}</h2>
 
-        <div class="formulario">
+        <div class="container formulario form-enter">
             <div>
                 <p class="fechar" @click="fecharModalFormulario">X</p>
                 <Modal>
                     <div>
-                        <button class="botao" type="submit" @click.prevent="atualizarDados">Atualizar Item</button>
+                        <button class="btn-save" type="submit" @click.prevent="atualizarDados">Atualizar Item</button>
                     </div>
                 </Modal>
             </div>
@@ -213,6 +213,10 @@ export default {
 
 <style scoped>
 
+.container {
+    padding: 0 30px;
+}
+
 .box-invoice {
     margin-top: 60px;
     text-align: center;
@@ -256,7 +260,6 @@ export default {
 }
 
 .invoice-values div p {
-    font-weight: 300;
     font-size: 18px;
 }
 
@@ -291,7 +294,13 @@ export default {
 .total {
     text-align: end;
     margin-top: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+}
+
+.btn-save {
+    color: #fff;
+    background-image: linear-gradient(to right, #097a7e, #097a7e);
+    margin-bottom: 0px;
 }
 
 .formulario {
@@ -311,9 +320,8 @@ export default {
 .formulario > div {
     position: absolute;
     top: 20%;
+    width: 76%;
     padding: 20px;
-    width: 82%;
-    margin: 0px auto;
     background-color: #fff;
     border-radius: 10px;
 }

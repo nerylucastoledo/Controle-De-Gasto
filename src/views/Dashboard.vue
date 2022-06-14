@@ -2,16 +2,26 @@
     <section class="container">
         <div v-if="!loading">
             <div class="filter">
-                <select v-model="monthSelected" class="filter-selected">
+                <select class="filter-selected" v-model="monthSelected">
                     <option disabled value="">Selecione o mês</option>
 
-                    <option v-for="month in months" :key="month">{{month}}</option>
+                    <option 
+                        v-for="month in months" 
+                        :key="month"
+                        >
+                        {{month}}
+                    </option>
                 </select>
 
                 <select v-model="yearSelected" class="filter-selected">
                     <option disabled value="">Selecione o ano</option>
 
-                    <option v-for="year in years" :key="year">{{year}}</option>
+                    <option 
+                        v-for="year in years" 
+                        :key="year"
+                        >
+                        {{year}}
+                    </option>
                 </select>
             </div>
 
@@ -142,7 +152,6 @@ export default {
     
     created() {
         document.title = 'Home'
-
         this.userName = localStorage.getItem('displayName').replace(' ', '')
 
         const date = new Date()
@@ -154,45 +163,20 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 
 .filter {
     margin-top: 60px;
+}
+
+.filter {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 
-.filter-selected {
-    width: 48%;
-    padding: 10px 0;
-    background-color: #EFF2E4;
-    border: 1px solid #B9DD2A;
-    font-family: 'Montserrat';
-    font-size: 16px;
-}
-
-#peopleSelected {
-    width: 100%;
-    margin-top: 20px;
-}
-
-.not-fund-card p{
-    text-align: center;
-    margin-top: 50px;
-}
-
-.not-fund-card a {
-    text-decoration: none;
-}
-
-.none {
-    margin-bottom: 40px;
-    font-size: 18px;
-}
-
-.register-card {
-    font-size: 14px;
-    margin-bottom: -30px;
+.filter select {
+    background-color: #04a8ad;
+    color: #fff;
 }
 
 </style>
