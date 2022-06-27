@@ -339,4 +339,10 @@ export default {
     z-index: 2;
 }
 
+@media(min-width: 720px) {
+    .formulario > div {
+        max-width: 560px;
+    }
+}
+
 </style>
