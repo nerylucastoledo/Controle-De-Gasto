@@ -1,7 +1,5 @@
 # MeusGastos :
 
-> Link do projeto: https://meusgastos.netlify.app/
-
 
 ## Um website mobile para controle da fatura do cartão
 
